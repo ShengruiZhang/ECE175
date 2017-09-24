@@ -1,5 +1,0 @@
-﻿  debug.c
-c:\users\ray\desktop\ece175\class_testing\class_testing\debug.c(36): error C4700: uninitialized local variable 'y2' used
-c:\users\ray\desktop\ece175\class_testing\class_testing\debug.c(36): error C4700: uninitialized local variable 'x2' used
-c:\users\ray\desktop\ece175\class_testing\class_testing\debug.c(36): error C4700: uninitialized local variable 'y1' used
-c:\users\ray\desktop\ece175\class_testing\class_testing\debug.c(36): error C4700: uninitialized local variable 'x1' used

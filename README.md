@@ -1,1 +1,1 @@
-# Test_ECE
+This is the entire directory for ece homeworks

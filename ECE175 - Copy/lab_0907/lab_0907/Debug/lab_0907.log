@@ -1,0 +1,4 @@
+﻿  problem_1.c
+c:\users\ray\desktop\ece175\lab_0907\lab_0907\problem_1.c(28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  lab_0907.vcxproj -> C:\Users\Ray\Desktop\ECE175\lab_0907\Debug\lab_0907.exe
+  lab_0907.vcxproj -> C:\Users\Ray\Desktop\ECE175\lab_0907\Debug\lab_0907.pdb (Partial PDB)

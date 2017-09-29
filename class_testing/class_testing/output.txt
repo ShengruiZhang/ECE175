@@ -1,0 +1,4 @@
+20 12 8 13 27 16 
+total sum is 96
+counter: 6
+the average is: 0

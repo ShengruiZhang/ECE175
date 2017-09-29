@@ -1,5 +1,4 @@
-﻿  debug.c
-c:\users\ray\desktop\ece175\class_testing\class_testing\debug.c(36): error C4700: uninitialized local variable 'y2' used
-c:\users\ray\desktop\ece175\class_testing\class_testing\debug.c(36): error C4700: uninitialized local variable 'x2' used
-c:\users\ray\desktop\ece175\class_testing\class_testing\debug.c(36): error C4700: uninitialized local variable 'y1' used
-c:\users\ray\desktop\ece175\class_testing\class_testing\debug.c(36): error C4700: uninitialized local variable 'x1' used
+﻿  FileIO_example.c
+c:\users\ray\desktop\ece175\class_testing\class_testing\fileio_example.c(34): warning C4477: 'fprintf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'double'
+  class_testing.vcxproj -> C:\Users\Ray\Desktop\ECE175\class_testing\x64\Debug\class_testing.exe
+  class_testing.vcxproj -> C:\Users\Ray\Desktop\ECE175\class_testing\x64\Debug\class_testing.pdb (Partial PDB)

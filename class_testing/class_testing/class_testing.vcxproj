@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="file_accessing.c" />
+    <ClCompile Include="FileIO_example.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="data.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{48DDE5BC-0847-4F0F-AF9D-164522BF1660}</ProjectGuid>

@@ -19,7 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lab_0921_p1.c" />
+    <Text Include="dist.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="lab_0928_p1.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7983B2D0-92BC-4248-87BA-08E8D52D4BD3}</ProjectGuid>

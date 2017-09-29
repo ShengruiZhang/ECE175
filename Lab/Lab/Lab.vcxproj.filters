@@ -15,7 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lab_0921_p1.c">
+    <Text Include="dist.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="lab_0928_p1.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

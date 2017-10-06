@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="hw4p2.c" />
+    <ClCompile Include="hw4p1.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F341ED5D-1C4B-4566-B62B-2D7DC9EF54EF}</ProjectGuid>

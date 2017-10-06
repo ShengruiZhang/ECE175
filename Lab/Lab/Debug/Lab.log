@@ -1,3 +1,4 @@
-﻿  lab_0928_p1.c
+﻿  midterm_1.c
+c:\users\ray\desktop\ece175\lab\lab\midterm_1.c(50): warning C4552: '+': operator has no effect; expected operator with side-effect
   Lab.vcxproj -> C:\Users\Ray\Desktop\ECE175\Lab\Debug\Lab.exe
   Lab.vcxproj -> C:\Users\Ray\Desktop\ECE175\Lab\Debug\Lab.pdb (Partial PDB)

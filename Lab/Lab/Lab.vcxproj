@@ -19,10 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="dist.txt" />
+    <ClCompile Include="midterm_1.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lab_0928_p1.c" />
+    <Text Include="1.txt" />
+    <Text Include="Test_Values.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7983B2D0-92BC-4248-87BA-08E8D52D4BD3}</ProjectGuid>

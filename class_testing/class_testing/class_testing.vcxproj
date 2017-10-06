@@ -19,9 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FileIO_example.c" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="data.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

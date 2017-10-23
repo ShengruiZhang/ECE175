@@ -1,7 +1,5 @@
-﻿  test.c
-c:\users\ray\desktop\ece175\project2\project2\test.c(33): warning C4244: '=': conversion from 'const double' to 'int', possible loss of data
-c:\users\ray\desktop\ece175\project2\project2\test.c(36): warning C4244: '=': conversion from 'const double' to 'int', possible loss of data
-c:\users\ray\desktop\ece175\project2\project2\test.c(39): warning C4244: '=': conversion from 'const double' to 'int', possible loss of data
-c:\users\ray\desktop\ece175\project2\project2\test.c(42): warning C4244: '=': conversion from 'const double' to 'int', possible loss of data
+﻿  test_pointer.c
+c:\users\ray\desktop\ece175\project2\project2\test_pointer.c(11): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'int *'
+c:\users\ray\desktop\ece175\project2\project2\test_pointer.c(14): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'int *'
   Project2.vcxproj -> C:\Users\Ray\Desktop\ECE175\Project2\Debug\Project2.exe
   Project2.vcxproj -> C:\Users\Ray\Desktop\ECE175\Project2\Debug\Project2.pdb (Partial PDB)

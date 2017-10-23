@@ -18,6 +18,9 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test_pointer.c" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FE646603-B82D-4CA7-9C5D-1105FF42B8F5}</ProjectGuid>
     <RootNamespace>Project2</RootNamespace>
@@ -112,9 +115,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="test.c" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -27,7 +27,7 @@ Problems: play the game hangman
 
 /*////////////////////// GET WORDS ////////////////////////////*/
 void get_word(char word[]) {
-	char WORD[][8] = {"program", "puzzles", "squeeze", "circult", "devoted", "journey", "version", "totally", "respect"};
+	char WORD[][8] = {"program", "puzzles", "squeeze", "circuit", "devoted", "journey", "version", "totally", "respect"};
 	int i, num;
 	num = (rand()%9);
 	for (i = 0; i < 7; ++i) {

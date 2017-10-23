@@ -14,7 +14,7 @@ Created Date: 10/20/17
 
 #define ROW 6
 #define COL 7
-#define INT 9
+#define INT 5
 
 typedef unsigned int uint;                // DEFINE
 typedef unsigned char uchar;
@@ -44,6 +44,7 @@ int main(void)
 	bool status = false;                  // MAIN LOOP CONDITIONAL VARI, FALSE FOR CONTINUING, TRUE FOR BREAK THE LOOP
 	bool veri = false;                    // FOR CHECK THE VALIDITY OF THE LETTER
 	uint round = 1;                       // ROUND VARI, DETERMINE WHOSE ROUNDM, GAME STARTS W/ PLYER 1
+	uint symbol = 1;                      // IDENTIFY WHOSE ROUND
 	uchar col_i = '\0';                   // INPUT LETTER VARI, WHERE THE PLACE IS PUT
 	
 	CURRENT_ROW c_r;                      // TRACK THE CURRENT ROW
@@ -62,6 +63,14 @@ int main(void)
 	
 	/* INITIATE EVERYTHING TO A NON 1,0 NUMBER */
 	INIT_BOARD(board, INT);
+
+	/*///////////////// DEBUGGING ////////////////*/
+	//for (int i = 0; i < ROW; ++i) {
+	//	for (int j = 0; j < COL; ++j) {
+	//		printf("%d ", board[i][j]);
+	//	}
+	//	printf("\n");
+	//}
 	
 	/*///////////////////////// LOOPING: CONDITION: STATUS /////////////////////////////*/
 
@@ -86,69 +95,71 @@ int main(void)
 			
 			if (round == 1 && col_i >= 65 && col_i <= 71) {           // ROUND FOR PLAYER 1, INPUT LETTER WAS CAP
 				veri = true;
+				symbol = 1;
 				temp = col_i - 65;   // TRANSLATE TO NUMBER
 				round = 2;           // SWAP PLAYER
 			}
 			else if (round == 1 && col_i >= 97 && col_i <= 103) {     // ROUND FOR PLAYER 1, INPUT LETTER WAS LOWER
 				veri = true;
+				symbol = 1;
 				temp = col_i - 97;   // TRANSLATE TO NUMBER
 				round = 2;           // SWAP PLAYER
-			
 			}
-			else if (round == 2 && col_i >= 65 && col_i <= 71) {      // ROUND FOR PLAYER 1, INPUT LETTER WAS CAP
+			else if (round == 2 && col_i >= 65 && col_i <= 71) {      // ROUND FOR PLAYER 2, INPUT LETTER WAS CAP
 				veri = true;
+				symbol = 2;
 				temp = col_i - 65;   // TRANSLATE TO NUMBER
 				round = 1;           // SWAP PLAYER
 			}
-			else if (round == 2 && col_i >= 97 && col_i <= 103) {     // ROUND FOR PLAYER 1, INPUT LETTER WAS LOWER
+			else if (round == 2 && col_i >= 97 && col_i <= 103) {     // ROUND FOR PLAYER 2, INPUT LETTER WAS LOWER
 				veri = true;
+				symbol = 2;
 				temp = col_i - 97;   // TRANSLATE TO NUMBER
 				round = 1;           // SWAP PLAYER
 			}
 			else {
-				veri = false;
 				printf("Invalid Entry\n");
 			}
 		}
 		
 		/*/////////// UPDATE BOARD ///////////*/
-		
 		switch (temp) {
 			case 0:
-			board[c_r.r_0][temp] = 1;
+			board[c_r.r_0][temp] = symbol;
 			++c_r.r_0;
 			break;
 			
 			case 1:
-			board[c_r.r_1][temp] = 1;
+			board[c_r.r_1][temp] = symbol;
 			++c_r.r_1;
 			break;
 			
 			case 2:
-			board[c_r.r_2][temp] = 1;
+			board[c_r.r_2][temp] = symbol;
 			++c_r.r_2;
 			break;
 			
 			case 3:
-			board[c_r.r_3][temp] = 1;
+			board[c_r.r_3][temp] = symbol;
 			++c_r.r_3;
 			break;
 			
 			case 4:
-			board[c_r.r_4][temp] = 1;
+			board[c_r.r_4][temp] = symbol;
 			++c_r.r_4;
 			break;
 			
 			case 5:
-			board[c_r.r_5][temp] = 1;
+			board[c_r.r_5][temp] = symbol;
 			++c_r.r_5;
 			break;
 			
 			case 6:
-			board[c_r.r_6][temp] = 1;
+			board[c_r.r_6][temp] = symbol;
 			++c_r.r_6;
 			break;
 		}
+		veri = false;     // FOR TESTING
 	}	
 	
 	return 0;
@@ -171,29 +182,37 @@ void INIT_BOARD(uint BOARD[][COL], uint tr)
 
 void PRINT_BOARD(uint BOARD[][COL]) 
 {
-	printf("\n");
-	printf("  A   B   C   D   E   F   G\n");
-	printf("|---|---|---|---|---|---|---|\n");
-	
-	for (int t = ROW; t >= 0; --t)
-	{
-		/*/////// PRINT THE CHARS //////
-		1 FOR X, 2 FOR O
-		*/
-		for (int c = 0; c < COL; ++c) {
-			if (BOARD[t][c] == 1) {
-				printf("| X ");
-			}
-			else if (BOARD[t][c] == 0) {
-				printf("| O ");
-			}
-			else if (BOARD[t][c] != 0 && BOARD[t][c] != 1) {
-				printf("|   ");
-			}
+	/*///////////////// DEBUGGING ////////////////*/
+	for (int i = (ROW - 1); i >= 0; --i) {
+		for (int j = 0; j < COL; ++j) {
+			printf("%d ", BOARD[i][j]);
 		}
-		printf("|\n");
-		printf("|---|---|---|---|---|---|---|\n");
+		printf("\n");
 	}
+	//printf("\n");
+	//printf("  A   B   C   D   E   F   G\n");
+	//printf("|---|---|---|---|---|---|---|\n");
+	//
+	//for (int t = ROW; t >= 0; --t)
+	//{
+	//	/*/////// PRINT THE CHARS //////
+	//	1 FOR X, 2 FOR O
+	//	*/
+	//	for (int c = 0; c < COL; ++c) {
+	//		if (BOARD[t][c] == 1) {
+	//			printf("| X ");
+	//		}
+	//		else if (BOARD[t][c] == 0) {
+	//			printf("| O ");
+	//		}
+	//		else if (BOARD[t][c] != 0 && BOARD[t][c] != 1) {
+	//			printf("|   ");
+	//		}
+	//		//printf("%d ", BOARD[t][c]);         // for dubugging
+	//	}
+	//	printf("|\n");
+	//	printf("|---|---|---|---|---|---|---|\n");
+	//}
 }
 
 

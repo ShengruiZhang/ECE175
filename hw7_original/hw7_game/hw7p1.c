@@ -175,7 +175,7 @@ void PRINT_BOARD(uint BOARD[][COL])
 	printf("  A   B   C   D   E   F   G\n");
 	printf("|---|---|---|---|---|---|---|\n");
 	
-	for (int t = (ROW - 1); t > 0; --t)
+	for (int t = ROW; t >= 0; --t)
 	{
 		/*/////// PRINT THE CHARS //////
 		1 FOR X, 2 FOR O

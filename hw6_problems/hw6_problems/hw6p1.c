@@ -17,7 +17,6 @@ Problems: fix a scrambled file and  find the largest four sequence digits
 */
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-//#include <calc.h>
 
 void print_IMEI(int IMEI[]);
 void calc_sum(int IMEI[], int *sum_14digits);

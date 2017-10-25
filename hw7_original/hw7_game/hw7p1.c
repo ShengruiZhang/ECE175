@@ -393,7 +393,7 @@ void BOARD_CHECK(uint BOARD[][COL], uint *result)
 		{
 			non_full *= COLUMN_FULL(BOARD, i);
 		}
-		printf("full: %d\n", non_full);    // ERROR NOTICE, FOR DEBUGGING
+		//printf("full: %d\n", non_full);    // ERROR NOTICE, FOR DEBUGGING
 
 		if (non_full == 1) {          // AND THE ENTIRE GRID IS FULL, THEN ANNOUNCE TIE
 			*result = 1;

@@ -13,5 +13,15 @@ int main(void)
 	//printf("%d\n", *p);      // value of point n (value of n)
 	printf("%d\n", p);      // address n
 	printf("\n");
+
+	int col[5];
+	col[4] = 0;
+	printf("%d\n", col[4]);
+	printf("%d\n", col[1555]);
+
+
+
+
+	printf("\n");
 	return 0;
 }

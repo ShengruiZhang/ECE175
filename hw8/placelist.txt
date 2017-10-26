@@ -1,0 +1,46 @@
+Vancouver International Airport
+Canada
+49.196691
+-123.181512
+Tucson International Airport
+USA
+32.114510
+-110.939227
+University of Arizona
+USA
+32.231885
+-110.950109
+Statue of Liberty
+USA
+40.689249
+-74.044500
+Big Ben
+UK
+51.500729
+-0.124625
+Forbidden City
+China
+39.916345
+116.397155
+Sydney Opera House
+Australia
+-33.856784
+151.215297
+Ministro Pistarini International Airport 
+Argentina
+-34.815004
+-58.534828
+Colosseo
+Italy
+41.890210
+12.492231
+Golden Gate Bridge
+USA
+37.819929
+-122.478255
+
+
+
+
+
+

@@ -1,0 +1,4 @@
+﻿  p1.main.c
+c:\users\ray\desktop\ece175\lab7\p1\p1.main.c(32): warning C4013: 'gets' undefined; assuming extern returning int
+  p1.vcxproj -> C:\Users\Ray\Desktop\ECE175\lab7\Debug\p1.exe
+  p1.vcxproj -> C:\Users\Ray\Desktop\ECE175\lab7\Debug\p1.pdb (Partial PDB)

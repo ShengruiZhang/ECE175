@@ -19,10 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F2F92858-8C8E-4336-85DC-924D3C5C5A8F}</ProjectGuid>
-    <RootNamespace>hw8p2c</RootNamespace>
+    <ProjectGuid>{5CDC0948-6327-4BA6-9874-0BF8F4CA2D05}</ProjectGuid>
+    <RootNamespace>p2</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
-    <ProjectName>problem_2</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -115,6 +114,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="hw8p2.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="placelist.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

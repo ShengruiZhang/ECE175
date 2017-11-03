@@ -1,0 +1,4 @@
+﻿  Main.c
+c:\users\ray\desktop\ece175\lab8\1\main.c(49): warning C4244: '=': conversion from 'double' to 'uint', possible loss of data
+  1.vcxproj -> C:\Users\Ray\Desktop\ECE175\LAB8\Debug\1.exe
+  1.vcxproj -> C:\Users\Ray\Desktop\ECE175\LAB8\Debug\1.pdb (Partial PDB)

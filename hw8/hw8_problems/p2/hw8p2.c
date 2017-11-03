@@ -46,6 +46,7 @@ int main(void)
 		++i; // UPDATE COUNTER
 	}
 	printf("[its latitude and longtitude are %.6lf and %.6lf]\n\n", LANT, LONG);
+	//printf("\n\n\n Debugging\n");
 	for (i = 0; i < 10; ++i) {
 		info[i].dist_r = dist(LANT, LONG, info[i].LAT, info[i].LON);
 	}
@@ -55,7 +56,7 @@ int main(void)
 		printf("[Latitude, Longtitude] = [%.6lf, %.6lf]\n\n", info[i].LAT, info[i].LON);
 		printf("Distance is %.3lf miles\n\n", info[i].dist_r);
 	}
-	printf("Reading ended.\n"); // FOR DEBUGGING
+	//printf("Reading ended.\n"); // FOR DEBUGGING
 	return 0;
 }
 
@@ -79,28 +80,73 @@ double dist(double lat1, double long1, double lat2, double long2)  // COPY PASTE
 void swap(place *a, place *b)
 {
 	double temp;
-	uchar temp_c;
+	uchar temp_c[50];
 	temp = (*a).dist_r;
 	(*a).dist_r = (*b).dist_r;
 	(*b).dist_r = temp;
+
+	temp = (*a).LAT;
+	(*a).LAT = (*b).LAT;
+	(*b).LAT = temp;
+
+	temp = (*a).LON;
+	(*a).LON = (*b).LON;
+	(*b).LON = temp;
+
 	strcpy(temp_c, (*a).name);
 	strcpy((*a).name, (*b).name);
 	strcpy((*a).name, temp_c);
+
+	strcpy(temp_c, (*a).CUN);
+	strcpy((*a).CUN, (*b).CUN);
+	strcpy((*a).CUN, temp_c);
 }
 
 void sorting(place x[], int amount)
 {
+	//for (int i = 0; i < 10; ++i) {
+	//	printf("%s, %s\n", x[i].name, x[i].CUN);
+	//	printf("[Latitude, Longtitude] = [%.6lf, %.6lf]\n\n", x[i].LAT, x[i].LON);
+	//	printf("Distance is %.3lf miles\n\n", x[i].dist_r);
+	//}
+	double temp;
+	uchar temp_c[50];
 	int min = 0; // MAX VALUE
 	int i, j; // LOOP VARI
 	for (i = 0; i < amount; ++i)
 	{
-		min = x[i].dist_r; // STARTS WITH THE FRIST ELEMENT
-		for (j = 0; j < amount; ++j)
+		min = i; // STARTS WITH THE FRIST ELEMENT
+		//printf("dist: %.3lf\n", x[i].dist_r);
+		for (j = i; j < amount; ++j)
 		{
-			if (x[j].dist_r < min) { // IF THERE IS A NUMBER SMALLER THAN MIN, THEN MOVE THE MIN DOWN
+			if (x[j].dist_r < x[min].dist_r) { // IF THERE IS A NUMBER SMALLER THAN MIN, THEN MOVE THE MIN DOWN
 				min = j; // GET THE INDEX
+				//printf("\t\tdist: %.3lf\n", x[i].dist_r);
+				//printf("\t\tdist: %.3lf\n", x[j].dist_r);
+				//printf("\t\ta is %d, i is %d, j is %d\n", a, i, j);
 			}
 		}
-		swap(&x[j], &x[i]);
+		//swap(&x[i], &x[min]);
+
+		temp = x[i].dist_r;
+		x[i].dist_r = x[min].dist_r;
+		x[min].dist_r = temp;
+
+		temp = x[i].LAT;
+		x[i].LAT = x[min].LAT;
+		x[min].LAT = temp;
+
+		temp = x[i].LON;
+		x[i].LON = x[min].LON;
+		x[min].LON = temp;
+
+		strcpy(temp_c, x[i].name);
+		strcpy(x[i].name, x[min].name);
+		strcpy(x[min].name, temp_c);
+
+		strcpy(temp_c, x[i].CUN);
+		strcpy(x[i].CUN, x[min].CUN);
+		strcpy(x[min].CUN, temp_c);		
 	}
+	
 }

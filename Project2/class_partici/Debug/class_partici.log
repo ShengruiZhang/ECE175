@@ -1,0 +1,5 @@
+﻿  main.c
+c:\users\ray\desktop\ece175\project2\class_partici\main.c(84): warning C4133: '=': incompatible types - from 'char *' to 'publisher *'
+c:\users\ray\desktop\ece175\project2\class_partici\main.c(115): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 3 has type 'publisher *'
+  class_partici.vcxproj -> C:\Users\Ray\Desktop\ECE175\Project2\Debug\class_partici.exe
+  class_partici.vcxproj -> C:\Users\Ray\Desktop\ECE175\Project2\Debug\class_partici.pdb (Partial PDB)

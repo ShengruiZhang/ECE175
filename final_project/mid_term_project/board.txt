@@ -1,3 +1,25 @@
-5489
-4589
-9875
+6
+Submarine
+3
+1 2 3
+C C C
+AircraftCarrier
+5
+5 6 7 8 9
+D E F G H
+Battleship
+4
+10 10 10 10
+G H I J
+Kayak
+1
+2
+I
+RowBoat
+1
+10
+A
+Cruiser
+3
+8 8 8
+A B C

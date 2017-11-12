@@ -1,13 +1,11 @@
 ﻿  mid_term.c
-c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(99): warning C4047: 'function': 'ship *' differs in levels of indirection from 'ship **'
-c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(99): warning C4024: 'board_configurate': different types for formal and actual parameter 1
-c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(99): warning C4024: 'board_configurate': different types for formal and actual parameter 2
-c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(99): warning C4047: 'function': 'FILE *' differs in levels of indirection from 'FILE **'
-c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(99): warning C4024: 'board_configurate': different types for formal and actual parameter 3
-c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(116): warning C4047: 'function': 'ship *' differs in levels of indirection from 'ship **'
-c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(116): warning C4024: 'board_configurate': different types for formal and actual parameter 1
-c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(116): warning C4024: 'board_configurate': different types for formal and actual parameter 2
-c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(89): warning C4101: 'file_name': unreferenced local variable
-c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(166): warning C4716: 'board_configurate': must return a value
+c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(115): warning C4047: 'function': 'ship *' differs in levels of indirection from 'ship **'
+c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(115): warning C4024: 'board_configurate': different types for formal and actual parameter 1
+c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(115): warning C4024: 'board_configurate': different types for formal and actual parameter 2
+c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(133): warning C4047: 'function': 'ship *' differs in levels of indirection from 'ship **'
+c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(133): warning C4024: 'board_configurate': different types for formal and actual parameter 1
+c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(133): warning C4024: 'board_configurate': different types for formal and actual parameter 2
+c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(82): warning C4101: 'file_name': unreferenced local variable
+c:\users\ray\desktop\ece175\final_project\mid_term_project\mid_term.c(245): warning C4716: 'board_configurate': must return a value
   mid_term_project.vcxproj -> C:\Users\Ray\Desktop\ECE175\final_project\Debug\mid_term_project.exe
   mid_term_project.vcxproj -> C:\Users\Ray\Desktop\ECE175\final_project\Debug\mid_term_project.pdb (Partial PDB)

@@ -27,8 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <math.h>   // PRBABLY NOT NEED THIS
+#include <time.h>
 
 // STRING SIZE DEFINING
 #define SIZE_SHIP_TYPE 21
@@ -51,6 +50,8 @@ typedef struct ship_s {
 	struct ship_s *next;              // POINTER TO NEXT SHIP
 } ship;
 
+void grid_print(ship *headptr);
+// THIS FUNCTION PRINTS THE GAME BOARD
 ship *board_configurate(ship *headptr, ship* tailptr, FILE *input);             
 // THIS FUNCTION CREATES THE LINKED LIST AT THE BEGINNING OF THE GAME
 
@@ -77,15 +78,20 @@ int main(void)
 	
 	// LINKED LIST DECLARATION
 
-	ship *player_head = (ship*)malloc(sizeof(ship));
-	ship *player_tail = (ship*)malloc(sizeof(ship));
-	player_head->next = NULL;
-	player_tail->next = NULL;
+	ship *player1_head = (ship*)malloc(sizeof(ship));
+	ship *player1_tail = (ship*)malloc(sizeof(ship));
+	player1_head->next = NULL;
+	player1_tail->next = NULL;
 
+	ship *player1_head = (ship*)malloc(sizeof(ship));
+	ship *player1_tail = (ship*)malloc(sizeof(ship));
+	player1_head->next = NULL;
+	player1_tail->next = NULL;
+	
 	ship *ai_head = NULL;
 	ship *ai_tail = NULL;
 
-	ship *temp = NULL;
+	//ship *temp = NULL;
 	
 	
 
@@ -98,7 +104,7 @@ int main(void)
 	printf("\nSelect which way to configurate the game board, configurate manually or input from an existing file. \n");
 	printf("\nType \"manual\" or \"file\" to choose input method. \n");
 	
-	while (fgets(command, 10, stdin))
+	while (fgets(command, SIZE_COMMAND, stdin))
 	{
 		if (strncmp(command, "manual", 6) == 0)
 		{
@@ -138,47 +144,16 @@ int main(void)
 			printf("Wrong command, please type again. \n");
 		}
 	}
-
-
-
-	ship *current;
-	current = player_head;
-	system("CLS");
-	printf("test:\n");
-	printf("%s %d\n%d\n%d\n",
-		current->next->type,
-		current->next->size,
-		current->next->loca_x[0],
-		current->next->loca_y[0]);
-
-	current = current->next;
-	printf("%s %d\n%d\n%d\n",
-		current->next->type,
-		current->next->size,
-		current->next->loca_x[0],
-		current->next->loca_y[0]);
-
-	current = current->next;
-	printf("%s %d\n%d\n%d\n",
-		current->next->type,
-		current->next->size,
-		current->next->loca_x[0],
-		current->next->loca_y[0]);
-
-	current = current->next;
-	printf("%s %d\n%d\n%d\n",
-		current->next->type,
-		current->next->size,
-		current->next->loca_x[0],
-		current->next->loca_y[0]);
-
-	current = current->next;
-	printf("%s %d\n%d\n%d\n",
-		current->next->type,
-		current->next->size,
-		current->next->loca_x[0],
-		current->next->loca_y[0]);
-
+	
+	
+	
+	/*//////////////////////////////////////////////
+	//  MAIN GAME LOOP                            //
+	//////////////////////////////////////////////*/
+	
+	// PRINTING THE BOARD
+	
+	
 	printf("Loop broke! \n");
 	
 	
@@ -194,6 +169,7 @@ int main(void)
 	return 0;
 }
 
+
 ship *board_configurate(ship *headptr, ship* tailptr, FILE *input)
 {
 	uint num_set_to_read = 0;
@@ -203,6 +179,9 @@ ship *board_configurate(ship *headptr, ship* tailptr, FILE *input)
 	uint j = 0;
 	
 	uchar str[15];                                                    // TEMP CHAR STRING
+	uchar str_command[SIZE_COMMAND];                                  // STR FOR COMMAND
+	memset(str, ' ', sizeof(str));
+	memset(str_command, ' ', sizeof(str_command));
 	
 	ship *temp = NULL;
 	ship *newest = (ship*)malloc(sizeof(ship));;
@@ -215,13 +194,15 @@ ship *board_configurate(ship *headptr, ship* tailptr, FILE *input)
 		
 		fscanf(input, "%d\n", &num_set_to_read);
 		printf("\nNumber of preset to read: %d \n", num_set_to_read);
+		sets_read = 0;
 	}
 	
 	
 	else if (input == stdin)                                         // INPUT FROM STDIN
 	{
 		printf("\nConfigurate the board manually. \n");
-		num_set_to_read = 999;                                       // SO THAT IT STEPS INTO THE LOOP
+		num_set_to_read = 0;                                         // SO THAT IT STEPS INTO THE LOOP
+		strncpy(str_command, "add", 3);
 	}
 	
 	else {
@@ -231,9 +212,9 @@ ship *board_configurate(ship *headptr, ship* tailptr, FILE *input)
 	
 	
 	// LOOP FOR TAKING INPUT
-	//num_set_to_read = 1;
-	for (sets_read = 0; sets_read < num_set_to_read; ++sets_read)
+	while (sets_read < num_set_to_read || strncmp(str_command, "add", 3) == 0)
 	{
+		memset(str_command, ' ', sizeof(str_command));
 		temp = (ship*)malloc(sizeof(ship));
 		
 		if (input == stdin) {
@@ -308,8 +289,7 @@ ship *board_configurate(ship *headptr, ship* tailptr, FILE *input)
 		}
 		
 		printf("\n");
-
-
+		
 
 
 		LOCATION_Y:
@@ -328,7 +308,7 @@ ship *board_configurate(ship *headptr, ship* tailptr, FILE *input)
 				goto LOCATION_Y;
 			}
 			str[j] = ' ';
-			if (temp->loca_y[i] == 10) {
+			if (temp->loca_y[i] == 10) {                       // HANDLE 10 DIFFERENTLY
 				str[j + 1] = ' ';
 				j += 1;
 			}
@@ -338,8 +318,8 @@ ship *board_configurate(ship *headptr, ship* tailptr, FILE *input)
 
 		printf("\n");
 		
+
 		// LINKS THE CURRENT CELL TO THE LIST
-		
 		if (headptr->next == NULL)
 		{
 			headptr->next = temp;                              // CONNECTS THE NEW CELL
@@ -352,8 +332,32 @@ ship *board_configurate(ship *headptr, ship* tailptr, FILE *input)
 			newest->next->next = tailptr;
 			newest = temp;
 		}
+		
+		if (input == stdin) {
+			printf("Type \"add\" to add another ship or \"end\" to start the game. \n");
+			while (fgets(str_command, SIZE_COMMAND, stdin)) {
+				if (strncmp(str_command, "add", 3) == 0 || strncmp(str_command, "end", 3) == 0) {
+					break;
+				}
+				else {
+					printf("Invalid input, enter again. Code: 005 \n");
+					memset(str_command, ' ', sizeof(str_command));
+				}
+			}
+		}
+		else {
+			++sets_read;
+		}
 	}
 	
-	
-	//return;
+	return newest;
 }
+
+
+void grid_print(ship *headptr)
+{
+	
+}
+
+
+

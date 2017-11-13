@@ -50,9 +50,9 @@ typedef struct ship_s {
 	struct ship_s *next;              // POINTER TO NEXT SHIP
 } ship;
 
-void grid_print(ship *headptr);
+void grid_print(ship *headptr_1, ship *headptr_2);
 // THIS FUNCTION PRINTS THE GAME BOARD
-ship *board_configurate(ship *headptr, ship* tailptr, FILE *input);             
+ship *board_configurate(ship *headptr, FILE *input);             
 // THIS FUNCTION CREATES THE LINKED LIST AT THE BEGINNING OF THE GAME
 
 int main(void)
@@ -76,6 +76,9 @@ int main(void)
 	uchar command[SIZE_COMMAND];                 // COMMAND STRING FOR USER INTERACTION
 	uchar file_name[SIZE_BOARD_FILE];            // THE FILE NAME FOR EXTERNAL BOARD CONFIGURATION
 	
+	uint num_player = 0;                         // WHAT FOR TRACKING WHOSE TURN
+	
+	
 	// LINKED LIST DECLARATION
 
 	ship *player1_head = (ship*)malloc(sizeof(ship));
@@ -83,15 +86,15 @@ int main(void)
 	player1_head->next = NULL;
 	player1_tail->next = NULL;
 
-	ship *player1_head = (ship*)malloc(sizeof(ship));
-	ship *player1_tail = (ship*)malloc(sizeof(ship));
-	player1_head->next = NULL;
-	player1_tail->next = NULL;
+	ship *player2_head = (ship*)malloc(sizeof(ship));
+	ship *player2_tail = (ship*)malloc(sizeof(ship));
+	player2_head->next = NULL;
+	player2_tail->next = NULL;
+
+	ship *temp = NULL;
 	
 	ship *ai_head = NULL;
 	ship *ai_tail = NULL;
-
-	//ship *temp = NULL;
 	
 	
 
@@ -100,17 +103,30 @@ int main(void)
 	//////////////////////////////////////////////*/
 	
 	// ASK FOR INPUT METHOR, TYPE MANUALLY OR FROM FILE
-	
+	num_player = 1;
 	printf("\nSelect which way to configurate the game board, configurate manually or input from an existing file. \n");
-	printf("\nType \"manual\" or \"file\" to choose input method. \n");
-	
-	while (fgets(command, SIZE_COMMAND, stdin))
+
+	while (1)
 	{
+		temp = player1_head;
+		if (num_player > 2) {
+			temp = player2_head;
+		}
+		
+		printf("Player %d: \nType \"manual\" or \"file\" to choose input method. \n", num_player);
+		fgets(command, SIZE_COMMAND, stdin);
+		
 		if (strncmp(command, "manual", 6) == 0)
 		{
 			inpt = stdin;
-			board_configurate(player_head, player_tail, inpt);
-			break;
+			if (board_configurate(temp, inpt) != NULL) {  // BOARD CONFIGURATING
+				++num_player;
+				break;
+			}
+			else {
+				printf("Error: Null list. Code: 006 \n. ");
+				break;
+			}
 		}
 		
 		else if (strncmp(command, "file", 4) == 0)
@@ -131,11 +147,18 @@ int main(void)
 					printf("Error when opening file. \n");
 				}
 				else {
-					board_configurate(player_head, player_tail, inpt);        // BOARD CONFIGURATING
-					fclose(inpt);
-					break;
+					if (board_configurate(temp, inpt) != NULL) {
+						fclose(inpt);
+						++num_player;
+						break;
+					}
+					else {
+						printf("Error: Null list. Code: 006 \n. ");
+						break;
+					}
 				}
 			}
+			if (num_player > 2)
 			break;
 		}
 		
@@ -152,25 +175,14 @@ int main(void)
 	//////////////////////////////////////////////*/
 	
 	// PRINTING THE BOARD
-	
+	grid_print(player1_head, player2_head);
 	
 	printf("Loop broke! \n");
-	
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
 	return 0;
 }
 
 
-ship *board_configurate(ship *headptr, ship* tailptr, FILE *input)
+ship *board_configurate(ship *headptr, FILE *input)
 {
 	uint num_set_to_read = 0;
 	uint sets_read = 0;
@@ -323,13 +335,13 @@ ship *board_configurate(ship *headptr, ship* tailptr, FILE *input)
 		if (headptr->next == NULL)
 		{
 			headptr->next = temp;                              // CONNECTS THE NEW CELL
-			headptr->next->next = tailptr;
+			headptr->next->next = NULL;
 			newest = temp;
 		}
 		else if (headptr->next != NULL)
 		{
 			newest->next = temp;
-			newest->next->next = tailptr;
+			newest->next->next = NULL;
 			newest = temp;
 		}
 		
@@ -354,9 +366,17 @@ ship *board_configurate(ship *headptr, ship* tailptr, FILE *input)
 }
 
 
-void grid_print(ship *headptr)
+void grid_print(ship *headptr_1, ship *headptr_2)
 {
-	
+	ship *current;
+	current = headptr_1->next;
+	system("CLS");
+	while (current != NULL)
+	{
+		printf("Ship: %s, Size: %d\n", current->type, current->size);
+		printf("x: %d, y: %d\n", current->loca_x[0], current->loca_y[0]);
+		current = current->next;
+	}
 }
 
 

@@ -1,25 +1,25 @@
 6
 Submarine
 3
-1 2 3
 C C C
+1 2 3
 AircraftCarrier
 5
-5 6 7 8 9
 D E F G H
+5 6 7 8 9
 Battleship
 4
-10 10 10 10
 G H I J
+10 10 10 10
 Kayak
 1
-2
 I
+2
 RowBoat
 1
-10
 A
+10
 Cruiser
 3
-8 8 8
 A B C
+8 8 8

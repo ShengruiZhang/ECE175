@@ -50,10 +50,20 @@ typedef struct ship_s {
 	struct ship_s *next;              // POINTER TO NEXT SHIP
 } ship;
 
-void grid_print(ship *headptr_1, ship *headptr_2);
-// THIS FUNCTION PRINTS THE GAME BOARD
+
 ship *board_configurate(ship *headptr, FILE *input);             
 // THIS FUNCTION CREATES THE LINKED LIST AT THE BEGINNING OF THE GAME
+
+uchar ship_translate(uint code);
+// THIS FUNCTION TRANSLATE THE SHIP TYPE CODE TO ONE-CHAR SYMBOL
+
+uint ship_code_translate(uchar symbol[]);
+// THIS FUNCTION TRANSLATE THE SHIP SYMBOL TO NUMBER CODE
+
+void grid_print(ship *headptr_1, ship *headptr_2);
+// THIS FUNCTION PRINTS THE GAME BOARD
+
+
 
 int main(void)
 {
@@ -71,7 +81,7 @@ int main(void)
 	//  GENERAL VARIABLE DECLARATION              //
 	//////////////////////////////////////////////*/
 	
-	FILE *inpt = NULL;                                  // SOURCE OF INPUT, STDIN OR FILE
+	FILE *inpt = NULL;                           // SOURCE OF INPUT, STDIN OR FILE
 	
 	uchar command[SIZE_COMMAND];                 // COMMAND STRING FOR USER INTERACTION
 	uchar file_name[SIZE_BOARD_FILE];            // THE FILE NAME FOR EXTERNAL BOARD CONFIGURATION
@@ -92,10 +102,7 @@ int main(void)
 	player2_tail->next = NULL;
 
 	ship *temp = NULL;
-	
-	ship *ai_head = NULL;
-	ship *ai_tail = NULL;
-	
+
 	
 
 	/*//////////////////////////////////////////////
@@ -103,6 +110,7 @@ int main(void)
 	//////////////////////////////////////////////*/
 	
 	// ASK FOR INPUT METHOR, TYPE MANUALLY OR FROM FILE
+	
 	num_player = 1;
 	printf("\nSelect which way to configurate the game board, configurate manually or input from an existing file. \n");
 
@@ -114,7 +122,8 @@ int main(void)
 		}
 		
 		printf("Player %d: \nType \"manual\" or \"file\" to choose input method. \n", num_player);
-		fgets(command, SIZE_COMMAND, stdin);
+		// fgets(command, SIZE_COMMAND, stdin);                      // TESTING SAKE
+		strcpy(command, "file");                                     // TESTING
 		
 		if (strncmp(command, "manual", 6) == 0)
 		{
@@ -133,6 +142,7 @@ int main(void)
 		{
 			while (1)
 			{
+				/*         // TESTING SAKE
 				printf("\nType the file name. \n");
 
 				fgets(file_name, SIZE_BOARD_FILE, stdin);
@@ -141,8 +151,9 @@ int main(void)
 				printf("\nFile name: %s \n", file_name);                      // COMFIRE FILE NAME
 
 				inpt = fopen(file_name, "r");
+				*/
 
-				//inpt = fopen("1.txt", "r");                                 // FOR TESTING SAKE
+				inpt = fopen("1.txt", "r");                                 // FOR TESTING SAKE
 				if (inpt == NULL) {
 					printf("Error when opening file. \n");
 				}
@@ -162,7 +173,6 @@ int main(void)
 			break;
 		}
 		
-		
 		else {
 			printf("Wrong command, please type again. \n");
 		}
@@ -177,9 +187,10 @@ int main(void)
 	// PRINTING THE BOARD
 	grid_print(player1_head, player2_head);
 	
-	printf("Loop broke! \n");
+	printf("\nLoop broke! \n");
 	return 0;
 }
+
 
 
 ship *board_configurate(ship *headptr, FILE *input)
@@ -366,18 +377,361 @@ ship *board_configurate(ship *headptr, FILE *input)
 }
 
 
-void grid_print(ship *headptr_1, ship *headptr_2)
+
+uchar ship_translate(uint code)
 {
-	ship *current;
-	current = headptr_1->next;
-	system("CLS");
-	while (current != NULL)
+	uchar ship_sym = ' ';
+	
+	switch (code)
 	{
-		printf("Ship: %s, Size: %d\n", current->type, current->size);
-		printf("x: %d, y: %d\n", current->loca_x[0], current->loca_y[0]);
-		current = current->next;
+		case 0:
+			ship_sym = ' ';
+			break;
+			
+		case 1:
+			ship_sym = 'A';
+			break;
+		
+		case 2:
+			ship_sym = 'B';
+			break;
+			
+		case 3:
+			ship_sym = 'C';
+			break;
+			
+		case 4:
+			ship_sym = 'S';
+			break;
+			
+		case 5:
+			ship_sym = 'P';
+			break;
+			
+		case 6:
+			ship_sym = 'K';
+			break;
+			
+		case 7:
+			ship_sym = 'R';
+			break;
+		
+		default:
+			printf("Error occured. Code: 201 \n");
 	}
+	return ship_sym;
 }
 
 
 
+uint ship_code_translate(uchar symbol[])
+{
+	uint num_code = 0;
+	if (strcmp(symbol, "AircraftCarrier") == 0 || strcmp(symbol, "aircraftcarrier") == 0)
+	{
+		num_code = 1;
+	}
+	else if (strcmp(symbol, "Battleship") == 0 || strcmp(symbol, "battleship") == 0)
+	{
+		num_code = 2;
+	}
+	else if (strcmp(symbol, "Cruiser") == 0 || strcmp(symbol, "cruiser") == 0)
+	{
+		num_code = 3;
+	}
+	else if (strcmp(symbol, "Submarine") == 0 || strcmp(symbol, "submarine") == 0)
+	{
+		num_code = 4;
+	}
+	else if (strcmp(symbol, "PatrolBoat") == 0 || strcmp(symbol, "patrolboat") == 0)
+	{
+		num_code = 5;
+	}
+	else if (strcmp(symbol, "Kayak") == 0 || strcmp(symbol, "kayak") == 0)
+	{
+		num_code = 6;
+	}
+	else if (strcmp(symbol, "RowBoat") == 0 || strcmp(symbol, "rowboat") == 0)
+	{
+		num_code = 7;
+	}
+	else {
+		printf("Error occured. Code: 301 \n");
+		num_code = 0;
+	}
+	return num_code;
+}
+
+
+
+void grid_print(ship *headptr_1, ship *headptr_2)
+{
+	const uint ROW = 10;
+	const uint COL = 10;
+
+	uint r = 0; // FOR ROW Y LOCATION
+	uint c = 0; // FOR COL X LOCATION
+
+	uint index_array = 0;
+	uint ship_type = 0;
+
+	uchar ship_code = ' ';
+	uchar num_row[4];
+	memset(num_row, ' ', sizeof(num_row));
+
+	ship *temp = NULL;
+
+	uint grid_1[10][10]; // PLAYER 1
+	uint grid_2[10][10]; // PLAYER 2
+
+	// INITIATE THE ARRAY
+	for (c = 0; c < COL; ++c)
+	{
+		for (r = 0; r < ROW; ++r)
+		{
+			grid_1[c][r] = 0;
+			grid_2[c][r] = 0;
+		}
+	}
+		
+	
+	// UPDATE THE GRID BASED ON THE SHIP TYPE
+	temp = headptr_1->next;
+	while (temp != NULL)
+	{
+		ship_type = ship_code_translate(temp->type);
+		for (index_array = 0; index_array < temp->size; ++index_array)
+		{
+			//printf("debug: x: %d, y: %d\n", temp->loca_x[index_array], temp->loca_y[index_array]);
+			grid_1[temp->loca_x[index_array] - 1][temp->loca_y[index_array] - 1] = ship_type;
+		}
+		temp = temp->next;
+	}
+	
+	temp = headptr_2->next;
+	while (temp != NULL)
+	{
+		for (index_array = 0; index_array < temp->size; ++index_array)
+		{
+			grid_2[temp->loca_x[index_array] - 1][temp->loca_y[index_array] - 1] = ship_type;
+		}
+		temp = temp->next;
+	}
+	
+
+	// START PRINTING
+
+	system("CLS");
+	printf("\n\n");
+
+	printf("                               Player 1");
+	printf("                                                         Player 2\n\n");
+
+
+	printf("     ");                                                              // 5 SPACES
+	printf("   A     B     C     D     E     F     G     H     I     J");
+	printf("             ");                                                      // 14 SPACES
+	printf("     A   B   C   D   E   F   G   H   I   J\n");
+
+	printf("     ");                                                              // 5 SPACES
+	printf("-------------------------------------------------------------");
+	printf("              ");                                                     // 15 SPACES
+	printf("-----------------------------------------\n");
+
+
+
+	// START PRINTING THE BOARD
+	
+	for (r = 0; r < ROW; ++r)
+	{
+		printf("     ");                                                          // 5 SPACES
+		printf("|     |     |     |     |     |     |     |     |     |     |");
+
+		snprintf(num_row, 3, "%d", r + 1);
+		if ((r + 1) < 10)
+			strncat(num_row, " ", 1);
+		printf("          %s  ", num_row);                                        // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
+		for (c = 0; c < COL; ++c)
+		{
+			//printf("debug2: %d\n", grid_1[r][c]);
+			ship_code = ship_translate(grid_2[r][c]);
+			printf("| %c ", ship_code);
+		}
+		printf("|\n");
+
+		printf(" %s  ", num_row);                                                 // LG BOARD 5 SPACES, NUM ON SECOND FROM RIGHT
+		for (c = 0; c < COL; ++c)
+		{
+			ship_code = ship_translate(grid_1[r][c]);
+			printf("|  %c  ", ship_code);
+		}
+		printf("|");
+		printf("              ");                                                 // 15 SPACES
+		printf("-----------------------------------------\n");
+	}
+	
+
+
+
+
+
+
+
+
+
+	/*
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("          1  ");                                                      // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
+	printf("|   |   |   |   |   |   |   |   |   |   |\n");
+
+	printf("   1 ");                                                              // LG BOARD 5 SPACES, NUM ON SECOND FROM RIGHT
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("             ");                                                      // 14 SPACES
+	printf("-----------------------------------------\n");
+
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("          2  ");                                                      // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
+	printf("|   |   |   |   |   |   |   |   |   |   |\n");
+
+	printf("     ");                                                              // 5 SPACES
+	printf("-------------------------------------------------------------");
+	printf("             ");                                                      // 14 SPACES
+	printf("-----------------------------------------\n");
+
+	//
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("          3  ");                                                      // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
+	printf("|   |   |   |   |   |   |   |   |   |   |\n");
+
+	printf("   2 ");                                                              // LG BOARD 5 SPACES, NUM ON SECOND FROM RIGHT
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("             ");                                                      // 14 SPACES
+	printf("-----------------------------------------\n");
+
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("          4  ");                                                      // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
+	printf("|   |   |   |   |   |   |   |   |   |   |\n");
+
+	printf("     ");                                                              // 5 SPACES
+	printf("-------------------------------------------------------------");
+	printf("             ");                                                      // 14 SPACES
+	printf("-----------------------------------------\n");
+
+	//
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("          5  ");                                                      // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
+	printf("|   |   |   |   |   |   |   |   |   |   |\n");
+
+	printf("   3 ");                                                              // LG BOARD 5 SPACES, NUM ON SECOND FROM RIGHT
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("             ");                                                      // 14 SPACES
+	printf("-----------------------------------------\n");
+
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("          6  ");                                                      // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
+	printf("|   |   |   |   |   |   |   |   |   |   |\n");
+
+	printf("     ");                                                              // 5 SPACES
+	printf("-------------------------------------------------------------");
+	printf("             ");                                                      // 14 SPACES
+	printf("-----------------------------------------\n");
+
+	//
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("          7  ");                                                      // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
+	printf("|   |   |   |   |   |   |   |   |   |   |\n");
+
+	printf("   4 ");                                                              // LG BOARD 5 SPACES, NUM ON SECOND FROM RIGHT
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("             ");                                                      // 14 SPACES
+	printf("-----------------------------------------\n");
+
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("          8  ");                                                      // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
+	printf("|   |   |   |   |   |   |   |   |   |   |\n");
+
+	printf("     ");                                                              // 5 SPACES
+	printf("-------------------------------------------------------------");
+	printf("             ");                                                      // 14 SPACES
+	printf("-----------------------------------------\n");
+
+	//
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("          9  ");                                                      // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
+	printf("|   |   |   |   |   |   |   |   |   |   |\n");
+
+	printf("   5 ");                                                              // LG BOARD 5 SPACES, NUM ON SECOND FROM RIGHT
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("             ");                                                      // 14 SPACES
+	printf("-----------------------------------------\n");
+
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |");
+	printf("         10  ");                                                      // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
+	printf("|   |   |   |   |   |   |   |   |   |   |\n");
+
+	printf("     ");                                                              // 5 SPACES
+	printf("-------------------------------------------------------------");
+	printf("             ");                                                      // 14 SPACES
+	printf("-----------------------------------------\n");
+
+	// SM BOARD FINISHED, ONLY DEAL WITH THE LG BOARD
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("   6 ");                                                              // LG BOARD 5 SPACES, NUM ON SECOND FROM RIGHT
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("     ");                                                              // 5 SPACES
+	printf("-------------------------------------------------------------\n");
+
+	//
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("   7 ");                                                              // LG BOARD 5 SPACES, NUM ON SECOND FROM RIGHT
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("     ");                                                              // 5 SPACES
+	printf("-------------------------------------------------------------\n");
+
+	//
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("   8 ");                                                              // LG BOARD 5 SPACES, NUM ON SECOND FROM RIGHT
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("     ");                                                              // 5 SPACES
+	printf("-------------------------------------------------------------\n");
+
+	//
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("   9 ");                                                              // LG BOARD 5 SPACES, NUM ON SECOND FROM RIGHT
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("     ");                                                              // 5 SPACES
+	printf("-------------------------------------------------------------\n");
+
+	//
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("  10 ");                                                              // LG BOARD 5 SPACES, NUM ON SECOND FROM RIGHT
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("     ");                                                              // 5 SPACES
+	printf("|     |     |     |     |     |     |     |     |     |     |\n");
+	printf("     ");                                                              // 5 SPACES
+	printf("-------------------------------------------------------------\n");
+	*/
+}

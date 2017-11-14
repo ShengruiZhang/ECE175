@@ -5,6 +5,7 @@
 
 int main(void)
 {
+	/*
 	FILE *input = fopen("1.txt", "r");
 	//char test[5];
 	int a,b,c;
@@ -18,6 +19,21 @@ int main(void)
 	//fgets(test, 5, input);
 	fscanf(input, "%d %d %d", &a, &b, &c);
 	printf("%d %d %d\n", a, b, c);
+	*/
 
+	char buffer[3];
+	int a = 5;
+
+	snprintf(buffer, 3, "%d", a);
+
+	// if (cx>=0 && cx<100)      // check returned value
+
+	// snprintf ( buffer+cx, 100-cx, ", and the half of that is %d.", 60/2/2 );
+
+	puts(buffer);
+	a = 10;
+	snprintf(buffer, 3, "%d", a);
+
+	puts(buffer);
 	return 0;
 }

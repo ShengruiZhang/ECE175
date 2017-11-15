@@ -194,15 +194,15 @@ int main(void)
 	num_player = 1;
 	while (empty != true)
 	{
-		if (empty)
-			break;
-
-		if (empty_board(empty_board(player1_head))) {
-			num_player = 2;
-		}
-		else if (empty_board(empty_board(player2_head))) {
+		if (empty_board(player1_head)) {
 			num_player = 1;
 		}
+		else if (empty_board(player2_head)) {
+			num_player = 2;
+		}
+
+		if (empty_board(player1_head) == true && empty_board(player2_head) == true)
+			break;
 
 		if (num_player == 1)
 		{

@@ -51,6 +51,8 @@ typedef struct ship_s {
 	struct ship_s *next;               // POINTER TO NEXT SHIP
 } ship;
 
+uint loca_protection(ship *headptr, uint sce[][10]);
+// THIS FUNCTION PROVIDE PROTECTION AGAINST LOCATION OVERLAP
 
 ship *board_configurate(ship *headptr, FILE *input);             
 // THIS FUNCTION CREATES THE LINKED LIST AT THE BEGINNING OF THE GAME
@@ -242,8 +244,6 @@ int main(void)
 	return 0;
 }
 
-
-
 ship *board_configurate(ship *headptr, FILE *input)
 {
 	uint num_set_to_read = 0;
@@ -374,6 +374,7 @@ ship *board_configurate(ship *headptr, FILE *input)
 		// INPUT PROTECTION, ASSUME IN CORRECT FORMAT BUT WRONG NUMBER\LETTER
 		j = 0;
 		fgets(str, 15, input);
+		
 		for (i = 0; i < temp->size; ++i)
 		{
 			sscanf(str, "%d", &temp->loca_y[i]);
@@ -427,8 +428,6 @@ ship *board_configurate(ship *headptr, FILE *input)
 	return newest;
 }
 
-
-
 uchar ship_translate(uint code)
 {
 	uchar ship_sym = ' ';
@@ -474,8 +473,6 @@ uchar ship_translate(uint code)
 	return ship_sym;
 }
 
-
-
 uint ship_code_translate(uchar symbol[])
 {
 	uint num_code = 0;
@@ -513,8 +510,6 @@ uint ship_code_translate(uchar symbol[])
 	}
 	return num_code;
 }
-
-
 
 bool grid_print(ship *headptr_1, ship *headptr_2)
 {
@@ -690,8 +685,6 @@ bool grid_print(ship *headptr_1, ship *headptr_2)
 	return board_empty;
 }
 
-
-
 bool ship_remove(ship *headptr, uchar target[])
 {
 	ship *node = NULL;
@@ -723,8 +716,6 @@ bool ship_remove(ship *headptr, uchar target[])
 	return succeed;
 }
 
-
-
 bool empty_board(ship *headptr)
 {
 	bool empty = false;
@@ -733,4 +724,38 @@ bool empty_board(ship *headptr)
 		empty = true;
 
 	return empty;
+}
+
+uint loca_protection(ship *headptr, uint sce[][10])
+{
+	ship *temp = headptr->next;
+	
+	uint p = 0;
+	
+	bool request = false;
+	
+	uint permt = 0; // 0 FOR REQUEST PERMITED, ANYTHING ELSE REPRESENT HOW MANY ADDRESS IS OVERLAPPED
+	
+	while (temp != NULL)
+	{
+		for (p = 0; p < temp->size; ++p)
+		{
+			if (sce[temp->loca_x[p] - 1][temp->loca_y[p] - 1] == 0)
+			{
+				// REQURESTED ADDRESS EMPTY, REQUEST PERMITED
+				request = true;
+			}
+			else
+			{
+				request = false;
+				++permt;
+			}
+		}
+		
+		temp = temp->next; // GO TO NEXT SHIP IN THE LIST
+		
+		
+	}
+	
+	return permt;
 }

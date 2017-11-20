@@ -1,6 +1,22 @@
-#ifndef BATTLESHIP_H
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                 //
+//  ECE175 FINAL PROJECT                                                                           //
+//  BATTLESHIP GAME                                                                                //
+//                                                                                                 //
+//  HEADER   	                                                                                   //
+//                                                                                                 //
+//  Author:             Shengrui Zhang                                                             //
+//  Date Created:       11/09/17                                                                   //
+//  Email:              shengruizhang@email.arizona.edu                                            //
+//  Student ID:         23426900                                                                   //
+//                                                                                                 //
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 #define _CRT_SECURE_NO_WARNINGS
 
+#ifndef BATTLESHIP_H
 #define BATTLESHIP_H
 
 #include <stdio.h>
@@ -28,29 +44,28 @@ typedef struct ship_s {
 	uint *loca_x_hit;
 	uint *loca_y_hit;
 	
-	struct shiap_s *next;
+	struct ship_s *next;
 } ship;
 
-
-uint loca_protection(ship *headptr, uint sce[][10]);
-// THIS FUNCTION PROVIDE PROTECTION AGAINST LOCATION OVERLAP
-
-uint ship_code_translate(uchar symbol[]);
-// THIS FUNCTION TRANSLATE THE SHIP SYMBOL TO NUMBER CODE
-
-uchar ship_translate(uint code);
-// THIS FUNCTION TRANSLATE THE SHIP TYPE CODE TO ONE-CHAR SYMBOL
-
-ship *board_configurate(ship *headptr, FILE *input);             
+ship *board_configurate                (ship *headptr, FILE *input);             
 // THIS FUNCTION CREATES THE LINKED LIST AT THE BEGINNING OF THE GAME
 
-bool grid_print(ship *headptr_1, ship *headptr_2);
+uchar ship_translate                   (uint code);
+// THIS FUNCTION TRANSLATE THE SHIP TYPE CODE TO ONE-CHAR SYMBOL
+
+uint ship_code_translate               (uchar symbol[]);
+// THIS FUNCTION TRANSLATE THE SHIP SYMBOL TO NUMBER CODE
+
+bool grid_print                        (ship *headptr_1, ship *headptr_2);
 // THIS FUNCTION PRINTS THE GAME BOARD
 
-bool ship_remove(ship *headptr, uchar target[]);
+bool ship_remove                       (ship *headptr, uchar target[]);
 // THIS FUNCTION REMOVE A NODE SPECIFIED BY USER
 
-bool empty_board(ship *headptr);
+bool empty_board                       (ship *headptr);
 // THIS FUNCTION CHECKS IF A BOARD IS EMPTY
+
+bool loca_protection                   (ship *headptr, ship *tar);
+// THIS FUNCTION PROVIDE PROTECTION AGAINST LOCATION OVERLAP
 
 #endif

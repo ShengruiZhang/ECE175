@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include<stdbool.h>
 
 int main(void)
 {
@@ -20,17 +21,25 @@ int main(void)
 	fscanf(input, "%d %d %d", &a, &b, &c);
 	printf("%d %d %d\n", a, b, c);
 	*/
-
-	int arr1[10][10];
-	for (int i = 0; i < 10; ++i)
+	char c[21];
+	char d;
+	char e[10];
+	//
+	//fgets(d, 5, stdin);
+	if (stdin == '\0')
 	{
-		for (int j = 0; j < 10; ++j)
+		printf("nothing\n");
+	}
+	else {
+		fgets(c, 6, stdin);
+		while ((d = getchar()) != '\n' && d != EOF)
 		{
-			arr1[i][j] = j;
+			/*if (d == EOF) {
+				break;
+			}*/
 		}
 	}
-	int arr2[10][10];
-	arr2[1][10] = arr1;
-
+	fgets(e, 5, stdin);
+	printf("non 0: %s\n", e);
 	return 0;
 }

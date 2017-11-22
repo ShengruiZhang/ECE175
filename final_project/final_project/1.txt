@@ -1,0 +1,29 @@
+7
+AircraftCarrier
+5
+A B C D E
+1 2 3 4 5
+Kayak
+1
+F
+5
+RowBoat
+1
+H
+3
+Cruiser
+3
+J J J
+1 2 3
+PatrolBoat
+2
+A B
+6 6
+Submarine
+3
+B C D
+7 8 9
+Battleship
+4
+G H I J
+6 7 8 9

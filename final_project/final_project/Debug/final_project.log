@@ -1,3 +1,2 @@
-﻿  main.c
-  final_project.vcxproj -> C:\Users\Ray\Desktop\ECE175\final_project\Debug\final_project.exe
-  final_project.vcxproj -> C:\Users\Ray\Desktop\ECE175\final_project\Debug\final_project.pdb (Partial PDB)
+﻿  battleship.c
+c:\users\ray\desktop\ece175\final_project\final_project\battleship.c(24): error C2106: '=': left operand must be l-value

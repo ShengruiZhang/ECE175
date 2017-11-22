@@ -16,6 +16,16 @@
 
 #include "battleship.h"
 
+void buffer_clear(void)
+{
+	uchar c = '\0';
+	if (!feof(stdin))
+	{
+		while ((c = getchar()) = '\n' && c != EOF)
+		{}
+	}
+}
+
 ship *board_configurate                (ship *headptr, FILE *input)
 {
 	uint num_set_to_read = 0;
@@ -33,6 +43,7 @@ ship *board_configurate                (ship *headptr, FILE *input)
 	ship *temp = NULL;
 	ship *newest = NULL;
 
+	
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	// COMMAND OPERATION
 	if (input != stdin)
@@ -46,16 +57,18 @@ ship *board_configurate                (ship *headptr, FILE *input)
 	{
 		printf("\nConfigurate the board manually. \n");
 		num_set_to_read = 0;                                         // SO THAT IT STEPS INTO THE LOOP
+		strncpy(str_command, "add", 3);                              // SO THAT IT STEPS INTO THE LOOP
 	}
 	else {
 		printf("\nError occured. Code: 001 \n");                     // ERROR NOTICE
 	}
-		
+	
+	
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	// LOOP FOR TAKING INPUT
 	while (sets_read < num_set_to_read || strncmp(str_command, "add", 3) == 0)
 	{
-		memset(str_command, '\0', sizeof(str_command));
+		memset(str_command, '\0', sizeof(str_command));              // CLEAR COMMAND STREAM
 		temp = (ship*)malloc(sizeof(ship));
 		
 		if (input == stdin) {
@@ -67,6 +80,7 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		printf("Ship type: %s", temp->type);
 		if (input != stdin) printf("\n");
 		
+		
 		/////////////////////////////////////////////////////////////
 		GET_SIZE:
 		if (input == stdin) {
@@ -77,9 +91,11 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		sscanf(str, "%d", &temp->size);
 		if (temp->size > 5) {
 			printf("Invalid size. Code: 002");
+			buffer_clear();
 			goto GET_SIZE;
 		}
 		printf("Ship size: %d\n", temp->size);
+		
 		
 		/////////////////////////////////////////////////////////////
 		// LOCATES MEMORY
@@ -90,6 +106,7 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		temp->loca_x_hit = (uint*)malloc(temp->size * sizeof(uint));    // ALLOCATES FOR LOCATION
 		temp->loca_y_hit = (uint*)malloc(temp->size * sizeof(uint));    // ALLOCATES FOR LOCATION
 		
+		
 		/////////////////////////////////////////////////////////////
 		LOCATION_X:
 		if (input == stdin) {
@@ -99,6 +116,7 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		// HANDLING BOTH LOWER AND UPPER LETTERS
 		j = 0;
 		fgets(str, 2 * temp->size + 1, input);                              // GET LOCATION AT ONCE
+		buffer_clear();
 		
 		for (i = 0; i < temp->size; ++i)
 		{
@@ -125,6 +143,7 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		}
 		printf("\n");
 		
+		
 		/////////////////////////////////////////////////////////////
 		// TAKES THE Y LOCATIONS AT ONCE
 		LOCATION_Y:
@@ -135,6 +154,7 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		// INPUT PROTECTION, ASSUME IN CORRECT FORMAT BUT WRONG NUMBER\LETTER
 		j = 0;
 		fgets(str, 15, input);
+		buffer_clear();
 		
 		for (i = 0; i < temp->size; ++i)
 		{
@@ -143,9 +163,9 @@ ship *board_configurate                (ship *headptr, FILE *input)
 				printf("Invalid input, enter again. Code: 004 \n");
 				goto LOCATION_Y;
 			}
-			str[j] = '\0';
+			str[j] = ' ';                                      // IT HAS TO BE SPACE
 			if (temp->loca_y[i] == 10) {                       // HANDLE 10 DIFFERENTLY
-				str[j + 1] = '\0';
+				str[j + 1] = ' ';                              // IT HAS TO BE SPACE
 				j += 1;
 			}
 			j += 2;
@@ -153,9 +173,17 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		}	
 		printf("\n");
 		
+		
 		/////////////////////////////////////////////////////////////
 		// CHECK VALIDILTY OF THE LOCATION
-		loca_protection(headptr, temp->loca_x, temp->loca_y);
+		if (loca_protection(headptr, temp))
+		{
+			printf("locations are legal.\n");
+		}
+		else {
+			printf("locations are illegal.\n");
+			goto LOCATION_X;
+		}
 		
 		/////////////////////////////////////////////////////////////
 		// LINKS THE CURRENT CELL TO THE LIST
@@ -176,13 +204,16 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		// COMMAND HANDLING
 		if (input == stdin) {
 			printf("Type \"add\" to add another ship or \"end\" to start the game. \n");
-			while (fgets(str_command, SIZE_COMMAND, stdin)) {
-				if (strncmp(str_command, "add", 3) == 0 || strncmp(str_command, "end", 3) == 0) {
+			while (fgets(str_command, SIZE_COMMAND, stdin))
+			{
+				if (strncmp(str_command, "add", 3) == 0 || strncmp(str_command, "end", 3) == 0)
+				{
 					break;
 				}
 				else {
-					printf("Invalid input, enter again. Code: 005 \n");
+					printf("Invalid command, enter again. Code: 005 \n");
 					memset(str_command, '\0', sizeof(str_command));
+					buffer_clear();
 				}
 			}
 		}
@@ -489,6 +520,8 @@ bool loca_protection                   (ship *headptr, ship *tar)
 	
 	while (temp != NULL)
 	{
+		if (headptr->next == NULL)                 // IF IT IS THE FIRST NODE, SKIP CHECK
+			break;
 		for (i = 0; i < tar->size; ++i)            // LOOPING FOR ALL COORDINATES FROM THE TARGET
 		{
 			for (j = 0; j < temp->size; ++j)       // LOOPING FOR ALL COORDINATES FROM EXISTING SHIPS
@@ -505,7 +538,20 @@ bool loca_protection                   (ship *headptr, ship *tar)
 	return valid;
 }
 
-
+void list_print                        (ship *headptr)
+{
+	ship *temp = headptr->next;
+	while (temp != NULL)
+	{
+		printf("Ship Type: %s \t Size: %d \n", temp->type, temp->size);
+		for (uint i = 0; i < temp->size; ++i)
+		{
+			printf("x-coordinate: %d \t y-coordinate: %d \n", temp->loca_x[i], temp->loca_y[i]);
+		}
+		printf("\n");
+	}
+	printf("All element in the list has been printed.\n");
+}
 
 
 

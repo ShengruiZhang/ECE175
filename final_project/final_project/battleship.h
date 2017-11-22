@@ -47,6 +47,9 @@ typedef struct ship_s {
 	struct ship_s *next;
 } ship;
 
+void buffer_clear                      (void);
+// THIS FUNCTION PLAINLY FOR CLEARING THE INPUT BUFFER THE RIGTH WAY, SIMPLY BECAUSE FFLUSH DOES NOT WORK IN MY PROGRAM
+
 ship *board_configurate                (ship *headptr, FILE *input);             
 // THIS FUNCTION CREATES THE LINKED LIST AT THE BEGINNING OF THE GAME
 
@@ -67,5 +70,8 @@ bool empty_board                       (ship *headptr);
 
 bool loca_protection                   (ship *headptr, ship *tar);
 // THIS FUNCTION PROVIDE PROTECTION AGAINST LOCATION OVERLAP
+
+void list_print                        (ship *headptr);
+// THIS FUNCTION PRINTS ELEMENTS IN THE LINKED LIST
 
 #endif

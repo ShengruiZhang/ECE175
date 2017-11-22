@@ -1,4 +1,3 @@
 ﻿  main.c
-c:\users\ray\desktop\ece175\project2\test\main.c(33): warning C4047: '=': 'int' differs in levels of indirection from 'int (*)[10]'
   test.vcxproj -> C:\Users\Ray\Desktop\ECE175\Project2\Debug\test.exe
   test.vcxproj -> C:\Users\Ray\Desktop\ECE175\Project2\Debug\test.pdb (Partial PDB)

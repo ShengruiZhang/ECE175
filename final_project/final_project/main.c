@@ -36,18 +36,7 @@ int main(void)
 	printf("Welcome to the Battleship Game! \n\n");
 	
 	// A VISUAL ELEMENT FOR TEXT "BATTLESHIP"
-	
-	printf(" --------       ==    --------- ---------  ==       ==       ==--------   =====   ==       == ---------- ==-----  \n");
-	printf(" ==      =     =  =       ==       ==      ==       ==       ==         ==        ==       ==     ==     ==     = \n");
-	printf(" ==      ==   =    =      ==       ==      ==       ==       ==         ==        ==       ==     ==     ==      =\n");
-	printf(" ==      ==  =      =     ==       ==      ==       ==       ==         ==        ==       ==     ==     ==     = \n");
-	printf(" ==      =   =      =     ==       ==      ==       ==       ==          ==       ==       ==     ==     ==    =  \n");
-	printf(" --------    =      =     ==       ==      ==       ==       ==            ===    ==-------==     ==     ==----   \n");
-	printf(" ==      ==  =      =     ==       ==      ==       ==       ==--------        == ==       ==     ==     ==       \n");
-	printf(" ==      === --------     ==       ==      ==       ==       ==                 = ==       ==     ==     ==       \n");
-	printf(" ==      === =      =     ==       ==      ==       ==       ==                 = ==       ==     ==     ==       \n");
-	printf(" ==      ==  =      =     ==       ==      ==       ==       ==                == ==       ==     ==     ==       \n");
-	printf(" --------    =      =     ==       ==      -------- -------- ==--------  =====    ==       == ---------- ==       \n");
+	game_title();
 	
 	/*//////////////////////////////////////////////
 	//  GENERAL VARIABLE DECLARATION              //
@@ -59,12 +48,16 @@ int main(void)
 	memset(command, '\0', SIZE_COMMAND);         // INITINATE STRING
 	uchar file_name[SIZE_BOARD_FILE];            // THE FILE NAME FOR EXTERNAL BOARD CONFIGURATION
 	memset(file_name, '\0', SIZE_BOARD_FILE);    // INITINATE STRING
-	uchar ships[SIZE_SHIP_TYPE];                 // TO STORE THE NAME OF SHIPS, ONE AT A TIME
+//	uchar ships[SIZE_SHIP_TYPE];                 // TO STORE THE NAME OF SHIPS, ONE AT A TIME
 	
 	uint num_player = 0;                         // WHAT FOR TRACKING WHOSE TURN
 
 	bool empty = false;                          // INDICATOR FOR BOARD, EMPTY FOR TRUE
 	
+	player p1 = { "Player 1's name", 0, 0, 0, NULL};      // DATA FOR FIRST PLAYER
+	player ai = { "Computer", 0, 0, 0, NULL};             // DATA FOR AI
+	
+	temp_shot t_p1;
 	
 	// LINKED LIST DECLARATION
 
@@ -73,10 +66,10 @@ int main(void)
 	player1_head->next = NULL;
 	player1_tail->next = NULL;
 
-	ship *player2_head = (ship*)malloc(sizeof(ship));
-	ship *player2_tail = (ship*)malloc(sizeof(ship));
-	player2_head->next = NULL;
-	player2_tail->next = NULL;
+	ship *ai_head = (ship*)malloc(sizeof(ship));
+	ship *ai_tail = (ship*)malloc(sizeof(ship));
+	ai_head->next = NULL;
+	ai_tail->next = NULL;
 
 	ship *temp = NULL;
 
@@ -87,17 +80,18 @@ int main(void)
 	
 	// ASK FOR INPUT METHOR, TYPE MANUALLY OR FROM FILE
 	num_player = 1;                                                           // BOTH PLAYER NEEDS TO ENTER DATA
+	printf("Player: Enter your name. ");
+	scanf("%s", p1.name);
+	getchar();
+	//printf("Your name: %s \n", p1.name);
 	printf("\nSelect which way to configurate the game board, configurate manually or input from an existing file. \n");
 
 	while (1)
 	{
 		// DETERMINS WHOSE TURN TO INPUT
 		temp = player1_head;
-		if (num_player > 1) {
-			temp = player2_head;
-		}
-		
-		printf("\nPlayer %d: \nType \"manual\" or \"file\" to choose input method. \n", num_player);
+
+		printf("\n%s: Type \"manual\" or \"file\" to choose input method. \n", p1.name);
 		fgets(command, SIZE_COMMAND, stdin);
 		
 		// INPUT MANUALLY
@@ -105,7 +99,7 @@ int main(void)
 		{
 			inpt = stdin;
 			if (board_configurate(temp, inpt) != NULL) {                      // BOARD CONFIGURATING
-				++num_player;
+				p1.list = temp;                                               // PUT THE LIST IN THE CONTAINER 
 				break;
 			}
 			else {
@@ -131,13 +125,13 @@ int main(void)
 				if (inpt == NULL) {
 					printf("Error when opening file. \n");
 					memset(file_name, '\0', SIZE_BOARD_FILE);                 // CLEAR STRING
-					buffer_clear();
 				}
+				
 				else 
 				{
 					if (board_configurate(temp, inpt) != NULL) {
+						p1.list = temp;                                       // PUT THE LIST IN THE CONTAINER     
 						fclose(inpt);
-						++num_player;
 						break;
 					}
 					else {
@@ -146,7 +140,6 @@ int main(void)
 					}
 				}
 			}
-			if (num_player > 2)
 			break;
 		}
 		
@@ -154,17 +147,62 @@ int main(void)
 		else {
 			printf("Wrong command, please type again. \n");
 			memset(command, '\0', SIZE_COMMAND);                              // CLEAR STRING
-			buffer_clear();
 		}
 	}
 	
+	// GENERATE BOARD FOR AI
+	inpt = fopen("2.txt", "r");
+	board_configurate(ai_head, inpt);
+	ai.list = ai_head;
+	fclose(inpt);
 	
 	/*//////////////////////////////////////////////
 	//  MAIN GAME LOOP                            //
 	//////////////////////////////////////////////*/
+	
 	while (1)
-	{ }
-	list_print(player1_head);
+	{
+		grid_print(p1.list, ai.list, p1.name);                                // DISPLAY GRID
+		
+		printf("\n\nEnter in the location of your next shot: row number, column letter. ");
+		scanf("%d %c", &t_p1.y, &(t_p1.x_c));
+		
+		coor_translate(&t_p1);                                                // TRANSLATE
+		//printf("row: %d, column: %c\n", t_p1.y, t_p1.x_c);
+		
+		list_update(t_p1, p1, ai_head);                                       // CHECK FOR HIT & MISS
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	return 0;
 }

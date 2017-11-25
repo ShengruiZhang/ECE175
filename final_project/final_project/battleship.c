@@ -16,14 +16,25 @@
 
 #include "battleship.h"
 
-void buffer_clear(void)
+void game_title                        (void)
+{
+	printf(" --------       ==    --------- --------- ==       ==       ==--------   =====   ==       == ---------- ==-----  \n");
+	printf(" ==      =     =  =       ==       ==     ==       ==       ==         ==        ==       ==     ==     ==     = \n");
+	printf(" ==      ==   =    =      ==       ==     ==       ==       ==         ==        ==       ==     ==     ==      =\n");
+	printf(" ==      ==  =      =     ==       ==     ==       ==       ==         ==        ==       ==     ==     ==     = \n");
+	printf(" ==      =   =      =     ==       ==     ==       ==       ==          ==       ==       ==     ==     ==    =  \n");
+	printf(" --------    =      =     ==       ==     ==       ==       ==            ===    ==-------==     ==     ==----   \n");
+	printf(" ==      ==  =      =     ==       ==     ==       ==       ==--------        == ==       ==     ==     ==       \n");
+	printf(" ==      === --------     ==       ==     ==       ==       ==                 = ==       ==     ==     ==       \n");
+	printf(" ==      === =      =     ==       ==     ==       ==       ==                 = ==       ==     ==     ==       \n");
+	printf(" ==      ==  =      =     ==       ==     ==       ==       ==                == ==       ==     ==     ==       \n");
+	printf(" --------    =      =     ==       ==     -------- -------- ==--------  =====    ==       == ---------- ==       \n");
+}
+
+void buffer_clear                      (void)
 {
 	uchar c = '\0';
-	if (!feof(stdin))
-	{
-		while ((c = getchar()) = '\n' && c != EOF)
-		{}
-	}
+	while ((c = getchar()) != '\n' && c != EOF);
 }
 
 ship *board_configurate                (ship *headptr, FILE *input)
@@ -89,6 +100,7 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		
 		fgets(str, 5, input);
 		sscanf(str, "%d", &temp->size);
+		temp->sleft = temp->size;                                       // INDICATE HOW MANY LEFT
 		if (temp->size > 5) {
 			printf("Invalid size. Code: 002");
 			buffer_clear();
@@ -116,7 +128,6 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		// HANDLING BOTH LOWER AND UPPER LETTERS
 		j = 0;
 		fgets(str, 2 * temp->size + 1, input);                              // GET LOCATION AT ONCE
-		buffer_clear();
 		
 		for (i = 0; i < temp->size; ++i)
 		{
@@ -154,7 +165,6 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		// INPUT PROTECTION, ASSUME IN CORRECT FORMAT BUT WRONG NUMBER\LETTER
 		j = 0;
 		fgets(str, 15, input);
-		buffer_clear();
 		
 		for (i = 0; i < temp->size; ++i)
 		{
@@ -176,11 +186,7 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		
 		/////////////////////////////////////////////////////////////
 		// CHECK VALIDILTY OF THE LOCATION
-		if (loca_protection(headptr, temp))
-		{
-			printf("locations are legal.\n");
-		}
-		else {
+		if (!loca_protection(headptr, temp)) {
 			printf("locations are illegal.\n");
 			goto LOCATION_X;
 		}
@@ -305,7 +311,7 @@ uint ship_code_translate               (uchar symbol[])
 	return num_code;
 }
 
-bool grid_print                        (ship *headptr_1, ship *headptr_2)
+bool grid_print                        (ship *headptr_1, ship *headptr_2, uchar name[])
 {
 	const uint ROW = 10;
 	const uint COL = 10;
@@ -378,8 +384,10 @@ bool grid_print                        (ship *headptr_1, ship *headptr_2)
 
 	printf("\n\n");
 
-	printf("                               Player 1");
-	printf("                                                         Player 2\n\n");
+	//printf("                               Player 1");
+	printf("                             Your board");
+	//printf("                                                         Player 2\n\n");
+	printf("                                                         Attempts\n\n");
 
 
 	printf("     ");                                                              // 5 SPACES
@@ -526,14 +534,17 @@ bool loca_protection                   (ship *headptr, ship *tar)
 		{
 			for (j = 0; j < temp->size; ++j)       // LOOPING FOR ALL COORDINATES FROM EXISTING SHIPS
 			{
-				if (tar->loca_x[i] == temp->loca_x[i] &&
-				    tar->loca_y[i] == temp->loca_y[i])
+				if (tar->loca_x[i] == temp->loca_x[j] &&
+				    tar->loca_y[i] == temp->loca_y[j])
 				{
 					// BREAK AND RETURE WITH FALSE
+					//printf("x: %d\ty: %d\n", tar->loca_x[i], tar->loca_y[i]);
+					//printf("x: %d\ty: %d\n", temp->loca_x[j], temp->loca_y[j]);
 					return valid = false;
 				}
 			}				
 		}
+		temp = temp->next;
 	}
 	return valid;
 }
@@ -548,19 +559,70 @@ void list_print                        (ship *headptr)
 		{
 			printf("x-coordinate: %d \t y-coordinate: %d \n", temp->loca_x[i], temp->loca_y[i]);
 		}
+		temp = temp->next;
 		printf("\n");
 	}
-	printf("All element in the list has been printed.\n");
+	printf("All element in the list has been displayed.\n");
 }
 
+/*
+check if it is a hit, miss
+update the value to opponent's list, to show which one is hit
+update the value to p1, to count miss, hit
+returns the type of ship been hit if the shot hits
 
 
 
 
+*/
 
+uint coor_translate                    (temp_shot *tar)
+{
+	if ((*tar).x_c >= 65 && (*tar).x_c <= 74)
+	{
+		(*tar).x = (*tar).x_c - 64;
+	}
+	else if ((*tar).x_c >= 97 && (*tar).x_c <= 106)
+	{
+		(*tar).x = (*tar).x_c - 96;
+	}
+	else
+	{
+		printf("Error occured. Code: 110\n");
+	}
+	return tar->x;
+}
 
-
-
+uint list_update                       (temp_shot atmp, player current_p, ship *oppen)
+{
+	ship *temp = oppen->next;
+	
+	uint u = 0;
+	
+	while (temp != NULL)
+	{
+		for (u = 0; u < temp->size; ++u)                             // LOOPING FOR EVERY COORS FOR EVERY SHIP
+		{
+			if (temp->loca_x[u] == atmp.x &&
+			    temp->loca_y[u] == atmp.y)
+			{
+				// FOR TESTING
+				printf("x: %d, x_c: %c, y: %d", atmp.x, atmp.x_c, atmp.y);
+				
+				// WRITE THE COOR TO OPPONENT'S LIST
+				temp->loca_x_hit[temp->sleft - 1] = atmp.x;
+				temp->loca_y_hit[temp->sleft - 1] = atmp.y;
+				printf("Hit: %d, %d\n", temp->loca_x_hit[temp->sleft - 1], temp->loca_y_hit[temp->sleft - 1]);
+				--temp->sleft;
+				u = ship_code_translate(temp->type);
+				return u;
+			}
+		}
+		temp = temp->next;
+	}
+	u = 0;
+	return u;
+}
 
 
 

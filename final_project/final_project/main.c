@@ -39,7 +39,7 @@ int main(void)
 	game_title();
 	
 	/*//////////////////////////////////////////////
-	//  GENERAL VARIABLE DECLARATION              //
+	//  VARIABLE DECLARATION                      //
 	//////////////////////////////////////////////*/
 	
 	FILE *inpt = NULL;                           // SOURCE OF INPUT, STDIN OR FILE
@@ -50,26 +50,39 @@ int main(void)
 	memset(file_name, '\0', SIZE_BOARD_FILE);    // INITINATE STRING
 //	uchar ships[SIZE_SHIP_TYPE];                 // TO STORE THE NAME OF SHIPS, ONE AT A TIME
 	
-	uint num_player = 0;                         // WHAT FOR TRACKING WHOSE TURN
+	uint num_player = 0;                         // WHAT FOR TRACKING WHOSE TURN, 0 FOR AI, 1 FOR HUMAN
+	
+	uint ship_temp = 0;                          // FOR TEMPORARY PROCESS
+	
+	uint game_end = 0;                           // INDICATE THE END OF THE GAME
 
 	bool empty = false;                          // INDICATOR FOR BOARD, EMPTY FOR TRUE
 	
-	player p1 = { "Player 1's name", 0, 0, 0, NULL};      // DATA FOR FIRST PLAYER
-	player ai = { "Computer", 0, 0, 0, NULL};             // DATA FOR AI
+	player p1 = { "Player 1's name", 0, 0, 0, {0}, {0}, NULL};     // DATA FOR FIRST PLAYER
+	player ai = { "Computer", 0, 0, 0, {0}, {0}, NULL};            // DATA FOR AI
 	
+	for (uint b = 0; b < 10; ++b)
+	{
+		for (uint c = 0; c < 10; ++c)
+		{
+			p1.map[b][c] = 3;
+			ai.map[b][c] = 3;
+			p1.map_0[b][c] = 0;
+			ai.map_0[b][c] = 0;
+		}
+	}
+
 	temp_shot t_p1;
+	temp_shot t_ai;
 	
+	//////////////////////////////////////
 	// LINKED LIST DECLARATION
 
-	ship *player1_head = (ship*)malloc(sizeof(ship));
-	ship *player1_tail = (ship*)malloc(sizeof(ship));
-	player1_head->next = NULL;
-	player1_tail->next = NULL;
+	ship *player1_head = malloc(sizeof(ship));
+	ship *ai_head = malloc(sizeof(ship));
 
-	ship *ai_head = (ship*)malloc(sizeof(ship));
-	ship *ai_tail = (ship*)malloc(sizeof(ship));
+	player1_head->next = NULL;
 	ai_head->next = NULL;
-	ai_tail->next = NULL;
 
 	ship *temp = NULL;
 
@@ -79,7 +92,6 @@ int main(void)
 	//////////////////////////////////////////////*/
 	
 	// ASK FOR INPUT METHOR, TYPE MANUALLY OR FROM FILE
-	num_player = 1;                                                           // BOTH PLAYER NEEDS TO ENTER DATA
 	printf("Player: Enter your name. ");
 	scanf("%s", p1.name);
 	getchar();
@@ -98,7 +110,7 @@ int main(void)
 		if (strncmp(command, "manual", 6) == 0)
 		{
 			inpt = stdin;
-			if (board_configurate(temp, inpt) != NULL) {                      // BOARD CONFIGURATING
+			if (board_configurate(temp, inpt, 0) != NULL) {                      // BOARD CONFIGURATING
 				p1.list = temp;                                               // PUT THE LIST IN THE CONTAINER 
 				break;
 			}
@@ -129,7 +141,7 @@ int main(void)
 				
 				else 
 				{
-					if (board_configurate(temp, inpt) != NULL) {
+					if (board_configurate(temp, inpt, 0) != NULL) {
 						p1.list = temp;                                       // PUT THE LIST IN THE CONTAINER     
 						fclose(inpt);
 						break;
@@ -152,57 +164,92 @@ int main(void)
 	
 	// GENERATE BOARD FOR AI
 	inpt = fopen("2.txt", "r");
-	board_configurate(ai_head, inpt);
+	board_configurate(ai_head, inpt, 1);
 	ai.list = ai_head;
 	fclose(inpt);
 	
+	// COPY SHIPS LOCATIONS TO MAP_0
+	array_config(p1.map_0, p1.list);
+	array_config(ai.map_0, ai.list);
+
+
 	/*//////////////////////////////////////////////
 	//  MAIN GAME LOOP                            //
 	//////////////////////////////////////////////*/
-	
+	srand((unsigned int)time(NULL));
+	num_player = 1;
 	while (1)
 	{
-		grid_print(p1.list, ai.list, p1.name);                                // DISPLAY GRID
+		system("CLS");
+
+		grid_print(p1, ai, game_end);                                       // DISPLAY GRID
+
+		/////////////////////////////////////////
+		// INTERRUPT THE GAME IF COMPUTER'S SHIPS ARE ALL SUNKEN
+		if (ai.list->next == NULL)
+		{
+			printf("\n\n%s won the game!\n", p1.name);
+			game_end = 1;
+			break;
+		}
+		else if (p1.list->next == NULL)
+		{
+			printf("\n\nComputer won the game!\n");
+			game_end = 1;
+			break;
+		}
 		
-		printf("\n\nEnter in the location of your next shot: row number, column letter. ");
-		scanf("%d %c", &t_p1.y, &(t_p1.x_c));
+		/////////////////////////////////////////
+		// AI AND HUMAN TAKE TURN
+		if (num_player == 1)
+		{
+			// HUMAN'S ROUND
+			
+			// FOR TESTING
+			/*temp = ai.list->next;
+			while (temp != NULL)
+			{
+				for (uint i = 0; i < temp->size; ++i)
+				{
+					printf("\nHit: x: %d, y: %d", temp->loca_x_hit[i], temp->loca_y_hit[i]);
+				}
+				temp = temp->next;
+			}*/
+			
+			LOCA_INPT:
+			printf("\n\n%s: Enter in the location of your next shot: row number, column letter. ", p1.name);
+			scanf("%d %c", &t_p1.y, &(t_p1.x_c));
+			
+			if (coor_translate(&t_p1) == 0)                                   // TRANSLATE AND CHECK INPUTS
+			{
+				goto LOCA_INPT;
+			}
+			//printf("row: %d, column: %c\n", t_p1.y, t_p1.x_c);
+			
+			///////////////////////////
+			// CHECK FOR HIT MISS SUNK
+			list_update(t_p1, &p1, &ai);	
+			
+			num_player = 0;
+		}
+		else if (num_player == 0)
+		{
+			// AI'S ROUND
+			t_ai.y = rand_num(0, 10);
+			t_ai.x = rand_num(0, 10);
+			t_ai.x_c = 0;
+			
+			///////////////////////////
+			// CHECK FOR HIT MISS SUNK
+			list_update(t_ai, &ai, &p1);
+			
+			num_player = 1;
+		}		
 		
-		coor_translate(&t_p1);                                                // TRANSLATE
-		//printf("row: %d, column: %c\n", t_p1.y, t_p1.x_c);
-		
-		list_update(t_p1, p1, ai_head);                                       // CHECK FOR HIT & MISS
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	grid_print(p1, ai, game_end);                                           // DISPLAY GRID
+
 	
 	return 0;
 }

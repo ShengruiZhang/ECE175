@@ -34,5 +34,14 @@
     <Text Include="2.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="3.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="hour_glass.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="battleship.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

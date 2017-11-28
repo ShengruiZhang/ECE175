@@ -18,17 +18,24 @@
 
 void game_title                        (void)
 {
-	printf(" --------       ==    --------- --------- ==       ==       ==--------   =====   ==       == ---------- ==-----  \n");
-	printf(" ==      =     =  =       ==       ==     ==       ==       ==         ==        ==       ==     ==     ==     = \n");
-	printf(" ==      ==   =    =      ==       ==     ==       ==       ==         ==        ==       ==     ==     ==      =\n");
-	printf(" ==      ==  =      =     ==       ==     ==       ==       ==         ==        ==       ==     ==     ==     = \n");
-	printf(" ==      =   =      =     ==       ==     ==       ==       ==          ==       ==       ==     ==     ==    =  \n");
-	printf(" --------    =      =     ==       ==     ==       ==       ==            ===    ==-------==     ==     ==----   \n");
-	printf(" ==      ==  =      =     ==       ==     ==       ==       ==--------        == ==       ==     ==     ==       \n");
-	printf(" ==      === --------     ==       ==     ==       ==       ==                 = ==       ==     ==     ==       \n");
-	printf(" ==      === =      =     ==       ==     ==       ==       ==                 = ==       ==     ==     ==       \n");
-	printf(" ==      ==  =      =     ==       ==     ==       ==       ==                == ==       ==     ==     ==       \n");
-	printf(" --------    =      =     ==       ==     -------- -------- ==--------  =====    ==       == ---------- ==       \n");
+	FILE *title = NULL;
+	uchar str[150];
+	title = fopen("battleship.txt", "r");
+	while (fgets(str, 149, title) != NULL)
+	{
+		printf("%s", str);
+	}
+}
+
+void hour_glass                        (void)
+{
+	FILE *title = NULL;
+	uchar str[150];
+	title = fopen("hour_glass.txt", "r");
+	while (fgets(str, 149, title) != NULL)
+	{
+		printf("%s", str);
+	}
 }
 
 void buffer_clear                      (void)
@@ -37,7 +44,7 @@ void buffer_clear                      (void)
 	while ((c = getchar()) != '\n' && c != EOF);
 }
 
-ship *board_configurate                (ship *headptr, FILE *input)
+ship *board_configurate                (ship *headptr, FILE *input, uint ai)
 {
 	uint num_set_to_read = 0;
 	uint sets_read = 0;
@@ -61,7 +68,10 @@ ship *board_configurate                (ship *headptr, FILE *input)
 	{		
 		// READ THE NUMBER OF SETS TO BE READ
 		fscanf(input, "%d\n", &num_set_to_read);
+		if (ai != 1)
+		{
 		printf("\nNumber of preset to read: %d \n", num_set_to_read);
+		}
 		sets_read = 0;
 	}
 	else if (input == stdin)                                         // INPUT FROM STDIN
@@ -88,8 +98,11 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		
 		fgets(temp->type, SIZE_SHIP_TYPE, input);                    // THE NEWLINE IS INCLUDED IN STRING
 		temp->type[strlen(temp->type) - 1] = 0;                      // DELETE NEWLINE
+		if (ai != 1)
+		{
 		printf("Ship type: %s", temp->type);
 		if (input != stdin) printf("\n");
+		}
 		
 		
 		/////////////////////////////////////////////////////////////
@@ -103,10 +116,12 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		temp->sleft = temp->size;                                       // INDICATE HOW MANY LEFT
 		if (temp->size > 5) {
 			printf("Invalid size. Code: 002");
-			buffer_clear();
 			goto GET_SIZE;
 		}
+		if (ai != 1)
+		{
 		printf("Ship size: %d\n", temp->size);
+		}
 		
 		
 		/////////////////////////////////////////////////////////////
@@ -117,6 +132,15 @@ ship *board_configurate                (ship *headptr, FILE *input)
 		temp->loca_y = (uint*)malloc(temp->size * sizeof(uint));        // ALLOCATES FOR LOCATION
 		temp->loca_x_hit = (uint*)malloc(temp->size * sizeof(uint));    // ALLOCATES FOR LOCATION
 		temp->loca_y_hit = (uint*)malloc(temp->size * sizeof(uint));    // ALLOCATES FOR LOCATION
+		
+		
+		/////////////////////////////////////////////////////////////
+		// SET HIT LOCATIONS TO 99
+		for (i = 0; i < temp->size; ++i)
+		{
+			temp->loca_x_hit[i] = 99;
+			temp->loca_y_hit[i] = 99;
+		}
 		
 		
 		/////////////////////////////////////////////////////////////
@@ -149,7 +173,10 @@ ship *board_configurate                (ship *headptr, FILE *input)
 				}
 				goto LOCATION_X;
 			}
+			if (ai != 1)
+			{	
 			printf("x location: %d\n", temp->loca_x[i]);
+			}
 			j += 2;
 		}
 		printf("\n");
@@ -178,12 +205,15 @@ ship *board_configurate                (ship *headptr, FILE *input)
 				str[j + 1] = ' ';                              // IT HAS TO BE SPACE
 				j += 1;
 			}
-			j += 2;
+			if (ai != 1)
+			{
 			printf("y location: %d\n", temp->loca_y[i]);
+			}
+			j += 2;
 		}	
 		printf("\n");
 		
-		
+			
 		/////////////////////////////////////////////////////////////
 		// CHECK VALIDILTY OF THE LOCATION
 		if (!loca_protection(headptr, temp)) {
@@ -266,6 +296,14 @@ uchar ship_translate                   (uint code)
 		case 7:
 			ship_sym = 'R';
 			break;
+			
+		case 10:
+			ship_sym = MISS;
+			break;
+		
+		case 11:
+			ship_sym = HIT;
+			break;
 		
 		default:
 			printf("Error occured. Code: 201 \n");
@@ -311,8 +349,31 @@ uint ship_code_translate               (uchar symbol[])
 	return num_code;
 }
 
-bool grid_print                        (ship *headptr_1, ship *headptr_2, uchar name[])
+uint array_config                      (uint grid[][10], ship *hptr)
 {
+	uint index_array = 0;
+	uint ship_type = 0;
+	
+	uint i = 0;
+	
+	ship *temp = hptr->next;
+	
+	while (temp != NULL)
+	{
+		ship_type = ship_code_translate(temp->type);
+		for (index_array = 0; index_array < temp->size; ++index_array)
+		{
+			grid[temp->loca_y[index_array] - 1][temp->loca_x[index_array] - 1] = ship_type;
+		}
+		temp = temp->next;
+		++i;
+	}
+	return i;
+}
+
+bool grid_print                        (player p1, player p2, uint end)
+{
+	// P1 FOR HUMAN PLAYER, P2 FOR AI
 	const uint ROW = 10;
 	const uint COL = 10;
 
@@ -348,7 +409,9 @@ bool grid_print                        (ship *headptr_1, ship *headptr_2, uchar 
 	}
 	
 	// UPDATE THE GRID BASED ON THE SHIP TYPE
-	temp = headptr_1->next;
+	num_ship_1 = array_config(grid_1, p1.list);
+	/*
+	temp = p1.list->next;
 	while (temp != NULL)
 	{
 		ship_type = ship_code_translate(temp->type);
@@ -359,17 +422,72 @@ bool grid_print                        (ship *headptr_1, ship *headptr_2, uchar 
 		++num_ship_1;
 		temp = temp->next;
 	}
+	*/
+	// UPDATE THE MISSES AND HITS BY OPPONENT
+	for (r = 0; r < 10; ++r)
+	{
+		for (c = 0; c < 10; ++c)
+		{
+			switch (p2.map[c][r])                // MISS
+			{
+				case 0:
+					grid_1[r][c] = 10;
+					if (end == 1)
+						p1.map_0[r][c] = 10;
+					break;
+				
+				case 1:                          // HIT
+					grid_1[r][c] = 11;
+					if (end == 1)
+						p1.map_0[r][c] = 11;
+					break;
+				
+				default:
+					break;
+			}
+		}
+	}
 	
-	temp = headptr_2->next;
+	// UPDATE THE GRID BASED ON THE SHIP TYPE
+	//num_ship_2 = array_config(grid_2, p2.list);
+	num_ship_2 = 1;
+	/*
+	temp = p2.list->next;
 	while (temp != NULL)
 	{
 		ship_type = ship_code_translate(temp->type);
 		for (index_array = 0; index_array < temp->size; ++index_array)
 		{
 			grid_2[temp->loca_y[index_array] - 1][temp->loca_x[index_array] - 1] = ship_type;
+			ai.map_0[temp->loca_y[index_array] - 1][temp->loca_x[index_array] - 1] = ship_type;
 		}
 		++num_ship_2;
 		temp = temp->next;
+	}
+	*/
+	// UPDATE THE MISSES AND HITS BY OPPONENT
+	for (r = 0; r < 10; ++r)
+	{
+		for (c = 0; c < 10; ++c)
+		{
+			switch (p1.map[c][r])                // MISS
+			{
+			case 0:
+				grid_2[r][c] = 10;
+				if (end == 1)
+					p2.map_0[r][c] = 10;
+				break;
+
+			case 1:                              // HIT
+				grid_2[r][c] = 11;
+				if (end == 1)
+					p2.map_0[r][c] = 11;
+				break;
+
+			default:
+				break;
+			}
+		}
 	}
 	
 	// CHECK IF BOTH BOARD IS EMPTY
@@ -384,10 +502,18 @@ bool grid_print                        (ship *headptr_1, ship *headptr_2, uchar 
 
 	printf("\n\n");
 
-	//printf("                               Player 1");
-	printf("                             Your board");
-	//printf("                                                         Player 2\n\n");
-	printf("                                                         Attempts\n\n");
+	if (end != 1)
+	{
+		//printf("                               Player 1");
+		printf("                             Your board");
+		//printf("                                                         Player 2\n\n");
+		printf("                                                         Attempts\n\n");
+	}
+	else
+	{
+		printf("                             Your board");
+		printf("                                                     Opponent's board\n\n");
+	}
 
 
 	printf("     ");                                                              // 5 SPACES
@@ -418,7 +544,13 @@ bool grid_print                        (ship *headptr_1, ship *headptr_2, uchar 
 			printf("         %s  ", num_row);                                     // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
 			for (c = 0; c < COL; ++c)
 			{
-				ship_code = ship_translate(grid_2[r_2][c]);
+				
+				if (end != 1) {
+					ship_code = ship_translate(grid_2[r_2][c]);
+				}
+				else {
+					ship_code = ship_translate(p2.map_0[c][r_2]);
+				}
 				printf("| %c ", ship_code);
 			}
 			++r_2;
@@ -479,11 +611,8 @@ bool grid_print                        (ship *headptr_1, ship *headptr_2, uchar 
 
 bool ship_remove                       (ship *headptr, uchar target[])
 {
-	ship *node = NULL;
-	ship *previous = NULL;
-
-	node = headptr->next;
-	previous = headptr;
+	ship *node = headptr->next;
+	ship *previous = headptr;
 	
 	bool succeed = false;
 	
@@ -565,19 +694,9 @@ void list_print                        (ship *headptr)
 	printf("All element in the list has been displayed.\n");
 }
 
-/*
-check if it is a hit, miss
-update the value to opponent's list, to show which one is hit
-update the value to p1, to count miss, hit
-returns the type of ship been hit if the shot hits
-
-
-
-
-*/
-
 uint coor_translate                    (temp_shot *tar)
 {
+	uint status = 99;
 	if ((*tar).x_c >= 65 && (*tar).x_c <= 74)
 	{
 		(*tar).x = (*tar).x_c - 64;
@@ -588,14 +707,22 @@ uint coor_translate                    (temp_shot *tar)
 	}
 	else
 	{
-		printf("Error occured. Code: 110\n");
+		//printf("Error occured. Code: 110\n");
+		(*tar).x = 99;
 	}
-	return tar->x;
+	
+	if ((*tar).y > 10 || (*tar).y < 1 || (*tar).x == 99)
+	{
+		printf("Location invalid. \n");
+		status = 0;
+	}
+	return status;
 }
 
-uint list_update                       (temp_shot atmp, player current_p, ship *oppen)
+uint list_update                       (temp_shot atmp, player *current_p, player *oppen)
 {
-	ship *temp = oppen->next;
+	ship *temp = (*oppen).list->next;                               // OPPONENT'S LIST
+	ship *previous = (*oppen).list;
 	
 	uint u = 0;
 	
@@ -603,30 +730,61 @@ uint list_update                       (temp_shot atmp, player current_p, ship *
 	{
 		for (u = 0; u < temp->size; ++u)                             // LOOPING FOR EVERY COORS FOR EVERY SHIP
 		{
-			if (temp->loca_x[u] == atmp.x &&
+			if (temp->loca_x[u] == atmp.x &&                         // CHECK FOR HIT
 			    temp->loca_y[u] == atmp.y)
 			{
 				// FOR TESTING
-				printf("x: %d, x_c: %c, y: %d", atmp.x, atmp.x_c, atmp.y);
+				//printf("x: %d, x_c: %c, y: %d\n", atmp.x, atmp.x_c, atmp.y);
 				
 				// WRITE THE COOR TO OPPONENT'S LIST
 				temp->loca_x_hit[temp->sleft - 1] = atmp.x;
 				temp->loca_y_hit[temp->sleft - 1] = atmp.y;
-				printf("Hit: %d, %d\n", temp->loca_x_hit[temp->sleft - 1], temp->loca_y_hit[temp->sleft - 1]);
+
+				// FOR TESTING
+				//printf("List hit: x: %d, y: %d\n", temp->loca_x[temp->sleft - 1], temp->loca_y[temp->sleft - 1]);
+				//printf("Hit: %d, %d\n", temp->loca_x_hit[temp->sleft - 1], temp->loca_y_hit[temp->sleft - 1]);
+
 				--temp->sleft;
-				u = ship_code_translate(temp->type);
+				(*current_p).hit += 1;                               // INCREASE HITS
+				(*current_p).map[atmp.x - 1][atmp.y - 1] = 1;        // COPTY TO MAP FOR HIT
+
+				u = 1;                                               // RETURN 0 IF SHIP HAS NOT SUNKEN YET
+				if (temp->sleft == 0)                                // SHIP SUNK
+				{
+					u = 2;
+					(*oppen).sunk += 1;                              // OPPONENT SUNK SHIP +1
+					// REMOVE THE SHIP FROM THE LIST
+					previous->next = temp->next;
+					free(temp);                                      // ATTEMPT TO FREE MEMORY
+				}
+				
 				return u;
 			}
+			
+			
 		}
+		previous = temp;
 		temp = temp->next;
 	}
+	(*current_p).miss += 1;                                          // INCREASE MISSES
+	(*current_p).map[atmp.x - 1][atmp.y - 1] = 0;                    // COPY MISS TO MAP
 	u = 0;
+	// RETURN 0 FOR MISS, 1 FOR HIT, 2 FOR SUNK
 	return u;
 }
 
-
-
-
+uint rand_num                          (uint low, uint high)
+{
+	if (low == 0) {
+		return rand() % ++high;                                              // INCREASE ONE SO THAT IT CAN RETURN HIGH
+	}
+	else if (low > 0) {
+		return rand() % ++high + low;
+	}
+	else {
+		return 1;
+	}
+}
 
 
 

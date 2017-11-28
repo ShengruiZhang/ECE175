@@ -1,4 +1,4 @@
-7
+1
 AircraftCarrier
 5
 A B C D E

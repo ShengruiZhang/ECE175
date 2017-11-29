@@ -75,6 +75,9 @@ typedef struct temp_shot_s {
 
 // FUNCTION PROTOTYPES
 
+void time_delay                        (uint sec);
+// THIS FUNCTION DELAYS A GIVEN AMOUNT OF TIME IN MILISECONDS
+
 void game_title                        (void);
 // THIS FUNCTION DISPLAY THE VISUAL TITLE OF BATTLESHIP
 

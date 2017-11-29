@@ -16,6 +16,12 @@
 
 #include "battleship.h"
 
+void time_delay                        (uint sec)
+{
+	time_t retTime = time(0) + sec;
+	while (time(0) < retTime);
+}
+
 void game_title                        (void)
 {
 	FILE *title = NULL;
@@ -424,26 +430,29 @@ bool grid_print                        (player p1, player p2, uint end)
 	}
 	*/
 	// UPDATE THE MISSES AND HITS BY OPPONENT
-	for (r = 0; r < 10; ++r)
+	if (1)
 	{
-		for (c = 0; c < 10; ++c)
+		for (r = 0; r < 10; ++r)
 		{
-			switch (p2.map[c][r])                // MISS
+			for (c = 0; c < 10; ++c)
 			{
-				case 0:
-					grid_1[r][c] = 10;
-					if (end == 1)
-						p1.map_0[r][c] = 10;
-					break;
-				
-				case 1:                          // HIT
-					grid_1[r][c] = 11;
-					if (end == 1)
-						p1.map_0[r][c] = 11;
-					break;
-				
-				default:
-					break;
+				switch (p2.map[c][r])                // MISS
+				{
+					case 0:
+						grid_1[r][c] = 10;
+						if (1)
+							p1.map_0[r][c] = 10;
+						break;
+					
+					case 1:                          // HIT
+						grid_1[r][c] = 11;
+						if (1)
+							p1.map_0[r][c] = 11;
+						break;
+					
+					default:
+						break;
+				}
 			}
 		}
 	}
@@ -451,41 +460,46 @@ bool grid_print                        (player p1, player p2, uint end)
 	// UPDATE THE GRID BASED ON THE SHIP TYPE
 	//num_ship_2 = array_config(grid_2, p2.list);
 	num_ship_2 = 1;
-	/*
-	temp = p2.list->next;
-	while (temp != NULL)
-	{
-		ship_type = ship_code_translate(temp->type);
-		for (index_array = 0; index_array < temp->size; ++index_array)
+
+		/*
+		temp = p2.list->next;
+		while (temp != NULL)
 		{
-			grid_2[temp->loca_y[index_array] - 1][temp->loca_x[index_array] - 1] = ship_type;
-			ai.map_0[temp->loca_y[index_array] - 1][temp->loca_x[index_array] - 1] = ship_type;
-		}
-		++num_ship_2;
-		temp = temp->next;
-	}
-	*/
-	// UPDATE THE MISSES AND HITS BY OPPONENT
-	for (r = 0; r < 10; ++r)
-	{
-		for (c = 0; c < 10; ++c)
-		{
-			switch (p1.map[c][r])                // MISS
+			ship_type = ship_code_translate(temp->type);
+			for (index_array = 0; index_array < temp->size; ++index_array)
 			{
-			case 0:
-				grid_2[r][c] = 10;
-				if (end == 1)
-					p2.map_0[r][c] = 10;
-				break;
+				grid_2[temp->loca_y[index_array] - 1][temp->loca_x[index_array] - 1] = ship_type;
+				p2.map_0[temp->loca_y[index_array] - 1][temp->loca_x[index_array] - 1] = ship_type;
+			}
+			++num_ship_2;
+			temp = temp->next;
+		*/
+		
+	// UPDATE THE MISSES AND HITS BY OPPONENT
 
-			case 1:                              // HIT
-				grid_2[r][c] = 11;
-				if (end == 1)
-					p2.map_0[r][c] = 11;
-				break;
+	if (end == 0)
+	{
+		for (r = 0; r < 10; ++r)
+		{
+			for (c = 0; c < 10; ++c)
+			{
+				switch (p1.map[c][r])                // MISS
+				{
+				case 0:
+					grid_2[r][c] = 10;
+					if (end == 1)
+						p2.map_0[r][c] = 10;
+					break;
 
-			default:
-				break;
+				case 1:                              // HIT
+					grid_2[r][c] = 11;
+					if (end == 1)
+						p2.map_0[r][c] = 11;
+					break;
+
+				default:
+					break;
+				}
 			}
 		}
 	}
@@ -544,12 +558,11 @@ bool grid_print                        (player p1, player p2, uint end)
 			printf("         %s  ", num_row);                                     // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
 			for (c = 0; c < COL; ++c)
 			{
-				
 				if (end != 1) {
 					ship_code = ship_translate(grid_2[r_2][c]);
 				}
 				else {
-					ship_code = ship_translate(p2.map_0[c][r_2]);
+					ship_code = ship_translate(p2.map_0[r_2][c]);
 				}
 				printf("| %c ", ship_code);
 			}
@@ -577,6 +590,26 @@ bool grid_print                        (player p1, player p2, uint end)
 			printf("             ");                                              // 14 SPACES
 			printf("-----------------------------------------\n");
 		}
+		else if (r == 6)
+		{
+			printf("             ");                                              // 14 SPACES
+			printf("%s        Computer\n", p1.name);
+		}
+		else if (r == 7)
+		{
+			printf("             ");                                              // 14 SPACES
+			printf("Hit: %d        Hit: %d\n", p1.hit, p2.hit);
+		}
+		else if (r == 8)
+		{
+			printf("             ");                                              // 14 SPACES
+			printf("Miss: %d        Miss: %d\n", p1.miss, p2.miss);
+		}
+		else if (r == 9)
+		{
+			printf("             ");                                              // 14 SPACES
+			printf("Sunk: %d        Sunk: %d\n", p1.sunk, p2.sunk);
+		}
 		else {
 			printf("\n");
 		}
@@ -594,7 +627,12 @@ bool grid_print                        (player p1, player p2, uint end)
 			printf("         %s  ", num_row);                                     // SM BOARD 14 SPACES, NUM ON THIRD FROM RIGHT
 			for (c = 0; c < COL; ++c)
 			{
-				ship_code = ship_translate(grid_2[r_2][c]);
+				if (end != 1) {
+					ship_code = ship_translate(grid_2[r_2][c]);
+				}
+				else {
+					ship_code = ship_translate(p2.map_0[r_2][c]);
+				}
 				printf("| %c ", ship_code);
 			}
 			++r_2;
@@ -726,6 +764,14 @@ uint list_update                       (temp_shot atmp, player *current_p, playe
 	
 	uint u = 0;
 	
+	///////////////////////////////////
+	// CHECK FOR SHOT OVERLAPPING
+	if ((*current_p).map[atmp.x - 1][atmp.y - 1] != 3)
+	{
+		printf("Location has been targeted, choose another one.");
+		return u = 3;
+	}
+	
 	while (temp != NULL)
 	{
 		for (u = 0; u < temp->size; ++u)                             // LOOPING FOR EVERY COORS FOR EVERY SHIP
@@ -749,7 +795,9 @@ uint list_update                       (temp_shot atmp, player *current_p, playe
 				(*current_p).map[atmp.x - 1][atmp.y - 1] = 1;        // COPTY TO MAP FOR HIT
 
 				u = 1;                                               // RETURN 0 IF SHIP HAS NOT SUNKEN YET
-				if (temp->sleft == 0)                                // SHIP SUNK
+				
+				// HANDLE SUNK SHIP
+				if (temp->sleft == 0)
 				{
 					u = 2;
 					(*oppen).sunk += 1;                              // OPPONENT SUNK SHIP +1
@@ -769,7 +817,7 @@ uint list_update                       (temp_shot atmp, player *current_p, playe
 	(*current_p).miss += 1;                                          // INCREASE MISSES
 	(*current_p).map[atmp.x - 1][atmp.y - 1] = 0;                    // COPY MISS TO MAP
 	u = 0;
-	// RETURN 0 FOR MISS, 1 FOR HIT, 2 FOR SUNK
+	// RETURN 0 FOR MISS, 1 FOR HIT, 2 FOR SUNK, 3 FOR INVALID
 	return u;
 }
 

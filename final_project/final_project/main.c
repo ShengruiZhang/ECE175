@@ -74,6 +74,9 @@ int main(void)
 
 	temp_shot t_p1;
 	temp_shot t_ai;
+	t_ai.y = 0;
+	t_ai.x = 0;
+	t_ai.x_c = 0;
 	
 	//////////////////////////////////////
 	// LINKED LIST DECLARATION
@@ -107,10 +110,11 @@ int main(void)
 		fgets(command, SIZE_COMMAND, stdin);
 		
 		// INPUT MANUALLY
+		//if (strcmp(command, "manual\n") == 0)
 		if (strncmp(command, "manual", 6) == 0)
 		{
 			inpt = stdin;
-			if (board_configurate(temp, inpt, 0) != NULL) {                      // BOARD CONFIGURATING
+			if (board_configurate(temp, inpt, 0) != NULL) {                   // BOARD CONFIGURATING
 				p1.list = temp;                                               // PUT THE LIST IN THE CONTAINER 
 				break;
 			}
@@ -121,6 +125,7 @@ int main(void)
 		}
 		
 		// INPUT FROM A FILE
+		//else if (strcmp(command, "file\n") == 0)
 		else if (strncmp(command, "file", 4) == 0)
 		{
 			while (1)
@@ -227,22 +232,33 @@ int main(void)
 			//printf("row: %d, column: %c\n", t_p1.y, t_p1.x_c);
 			
 			///////////////////////////
-			// CHECK FOR HIT MISS SUNK
-			list_update(t_p1, &p1, &ai);	
+			// CHECK FOR HIT MISS SUNK, OR LOCATION INVALID
+			if (list_update(t_p1, &p1, &ai) == 3)
+			{
+				goto LOCA_INPT;
+			}
 			
 			num_player = 0;
 		}
 		else if (num_player == 0)
 		{
+			system("CLS");
+			hour_glass();
+
 			// AI'S ROUND
 			t_ai.y = rand_num(0, 10);
 			t_ai.x = rand_num(0, 10);
 			t_ai.x_c = 0;
-			
+
 			///////////////////////////
-			// CHECK FOR HIT MISS SUNK
-			list_update(t_ai, &ai, &p1);
-			
+			// CHECK FOR HIT MISS SUNK, OR LOCATION INVALID
+			while (list_update(t_ai, &ai, &p1) == 3)
+			{
+				t_ai.y = rand_num(0, 10);
+				t_ai.x = rand_num(0, 10);
+				t_ai.x_c = 0;
+			}
+			time_delay(1);
 			num_player = 1;
 		}		
 		
@@ -250,6 +266,7 @@ int main(void)
 	
 	grid_print(p1, ai, game_end);                                           // DISPLAY GRID
 
+	printf("\n");
 	
 	return 0;
 }

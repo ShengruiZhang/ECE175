@@ -76,7 +76,7 @@ ship *board_configurate                (ship *headptr, FILE *input, uint ai)
 		fscanf(input, "%d\n", &num_set_to_read);
 		if (ai != 1)
 		{
-		printf("\nNumber of preset to read: %d \n", num_set_to_read);
+			printf("\nNumber of preset to read: %d \n", num_set_to_read);
 		}
 		sets_read = 0;
 	}
@@ -87,7 +87,7 @@ ship *board_configurate                (ship *headptr, FILE *input, uint ai)
 		strncpy(str_command, "add", 3);                              // SO THAT IT STEPS INTO THE LOOP
 	}
 	else {
-		printf("\nError occured. Code: 001 \n");                     // ERROR NOTICE
+		printf("\nError occured. Code: 501 \n");                     // ERROR NOTICE
 	}
 	
 	
@@ -106,8 +106,8 @@ ship *board_configurate                (ship *headptr, FILE *input, uint ai)
 		temp->type[strlen(temp->type) - 1] = 0;                      // DELETE NEWLINE
 		if (ai != 1)
 		{
-		printf("Ship type: %s", temp->type);
-		if (input != stdin) printf("\n");
+			//printf("Ship type: %s", temp->type);
+			if (input != stdin) printf("\n");
 		}
 		
 		
@@ -121,12 +121,12 @@ ship *board_configurate                (ship *headptr, FILE *input, uint ai)
 		sscanf(str, "%d", &temp->size);
 		temp->sleft = temp->size;                                       // INDICATE HOW MANY LEFT
 		if (temp->size > 5) {
-			printf("Invalid size. Code: 002");
+			printf("Invalid size. Code: 502");
 			goto GET_SIZE;
 		}
 		if (ai != 1)
 		{
-		printf("Ship size: %d\n", temp->size);
+			//printf("Ship size: %d\n", temp->size);
 		}
 		
 		
@@ -171,7 +171,7 @@ ship *board_configurate                (ship *headptr, FILE *input, uint ai)
 			}
 			else                                                            // HANDLE WRONG INPUT
 			{
-				printf("Invalid input, enter again. Code: 003\n");
+				printf("Invalid input, enter again. Code: 503\n");
 				// RESET
 				j = 0;
 				for (uint a = 0; a < (temp->size); ++a) {
@@ -181,7 +181,7 @@ ship *board_configurate                (ship *headptr, FILE *input, uint ai)
 			}
 			if (ai != 1)
 			{	
-			printf("x location: %d\n", temp->loca_x[i]);
+				//printf("x location: %d\n", temp->loca_x[i]);
 			}
 			j += 2;
 		}
@@ -203,7 +203,7 @@ ship *board_configurate                (ship *headptr, FILE *input, uint ai)
 		{
 			sscanf(str, "%d", &temp->loca_y[i]);
 			if (temp->loca_y[i] <= 0 || temp->loca_y[i] > 10) {
-				printf("Invalid input, enter again. Code: 004 \n");
+				printf("Invalid input, enter again. Code: 504 \n");
 				goto LOCATION_Y;
 			}
 			str[j] = ' ';                                      // IT HAS TO BE SPACE
@@ -213,7 +213,7 @@ ship *board_configurate                (ship *headptr, FILE *input, uint ai)
 			}
 			if (ai != 1)
 			{
-			printf("y location: %d\n", temp->loca_y[i]);
+				//printf("y location: %d\n", temp->loca_y[i]);
 			}
 			j += 2;
 		}	
@@ -253,7 +253,7 @@ ship *board_configurate                (ship *headptr, FILE *input, uint ai)
 					break;
 				}
 				else {
-					printf("Invalid command, enter again. Code: 005 \n");
+					printf("Invalid command, enter again. Code: 505 \n");
 					memset(str_command, '\0', sizeof(str_command));
 					buffer_clear();
 				}
@@ -312,7 +312,7 @@ uchar ship_translate                   (uint code)
 			break;
 		
 		default:
-			printf("Error occured. Code: 201 \n");
+			printf("Error occured. Code: 601 \n");
 	}
 	return ship_sym;
 }
@@ -349,7 +349,7 @@ uint ship_code_translate               (uchar symbol[])
 		num_code = 7;
 	}
 	else {
-		printf("Error occured. Code: 301 \n");
+		printf("Error occured. Code: 701 \n");
 		num_code = 0;
 	}
 	return num_code;
@@ -477,7 +477,7 @@ bool grid_print                        (player p1, player p2, uint end)
 		
 	// UPDATE THE MISSES AND HITS BY OPPONENT
 
-	if (end == 0)
+	if (1)
 	{
 		for (r = 0; r < 10; ++r)
 		{
@@ -745,7 +745,7 @@ uint coor_translate                    (temp_shot *tar)
 	}
 	else
 	{
-		//printf("Error occured. Code: 110\n");
+		//printf("Error occured. Code: 1401\n");
 		(*tar).x = 99;
 	}
 	
@@ -833,6 +833,118 @@ uint rand_num                          (uint low, uint high)
 		return 1;
 	}
 }
+
+ship *ship_generate                    (uint direc, uchar type[])
+{
+	// 0 FOR HORIZONTAL, 1 FOR VERTICAL, 2 FOR DIAGONAL
+	
+	ship *_temp = malloc(sizeof(ship));
+	
+	uint type_int = ship_code_translate(type);
+	
+	strcpy(_temp->type, type);
+	
+	switch (type_int)
+	{
+		case 1:
+			_temp->size = 5;		break;
+		
+		case 2:
+			_temp->size = 4;		break;
+		
+		case 3:
+			_temp->size = 3;		break;
+		
+		case 4:
+			_temp->size = 3;		break;
+		
+		case 5:
+			_temp->size = 2;		break;
+		
+		case 6:
+			_temp->size = 1;		break;
+		
+		case 7:
+			_temp->size = 1;		break;
+
+		default:					break;
+	}
+	_temp             = (ship*)realloc(_temp, sizeof(ship) + 4 * _temp->size * sizeof(uint));
+	_temp->loca_x     = (uint*)malloc(_temp->size * sizeof(uint));
+	_temp->loca_x_hit = (uint*)malloc(_temp->size * sizeof(uint));
+	_temp->loca_y     = (uint*)malloc(_temp->size * sizeof(uint));
+	_temp->loca_y_hit = (uint*)malloc(_temp->size * sizeof(uint));
+	
+	//direc = rand_num(0, 2);
+	
+	///////////////////////////////////
+	// TESTING
+	direc = 0;
+	
+	switch (direc)
+	{
+		case 0:                        // HORIZONTAL
+			_temp->loca_x[0] = rand_num(1, 10 - _temp->size);
+			_temp->loca_y[0] = rand_num(1, 10 - _temp->size);
+			for (uint u = 1; u < _temp->size; ++u)
+			{
+				_temp->loca_x[u] = _temp->loca_x[0] + u;
+				_temp->loca_y[u] = _temp->loca_y[0];
+			}
+		break;
+		
+		
+		
+		
+		
+		
+		
+		case 1:
+		
+		
+		break;
+		
+		
+		
+		
+		
+		
+		
+		
+		case 2:
+		
+		break;
+		
+		
+		
+		
+		
+		default:			break;
+		
+	}
+	
+	
+	//cell = _temp; 
+	_temp->next = NULL;
+	
+	return _temp;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -4,6 +4,19 @@
 #include <string.h>
 #include<stdbool.h>
 
+int rand_num(int low, int high)
+{
+	if (low == 0) {
+		return rand() % ++high;                                              // INCREASE ONE SO THAT IT CAN RETURN HIGH
+	}
+	else if (low > 0) {
+		return rand() % ++high + low;
+	}
+	else {
+		return 1;
+	}
+}
+
 int main(void)
 {
 	/*
@@ -21,25 +34,13 @@ int main(void)
 	fscanf(input, "%d %d %d", &a, &b, &c);
 	printf("%d %d %d\n", a, b, c);
 	*/
-	char c[21];
-	char d;
-	char e[10];
-	//
-	//fgets(d, 5, stdin);
-	if (stdin == '\0')
+	char str[10];
+	while (1)
 	{
-		printf("nothing\n");
-	}
-	else {
-		fgets(c, 6, stdin);
-		while ((d = getchar()) != '\n' && d != EOF)
+		if (fgets(str, 5, stdin))
 		{
-			/*if (d == EOF) {
-				break;
-			}*/
+			printf("%d\n", rand_num(0, 2));
 		}
 	}
-	fgets(e, 5, stdin);
-	printf("non 0: %s\n", e);
 	return 0;
 }

@@ -128,4 +128,6 @@ UPDATE THE VALUE TO P1, TO COUNT MISS, HIT
 uint rand_num                          (uint low, uint high);
 // THIS FUNCTION RETURNS A RANDOM NUMBER WITHIN THE RANGE GIVEN
 
+ship *ship_generate                    (uint direc, uchar type[]);
+// THIS FUNCTION GENERATES SHIPS FOR AI, SAME NUMBER, SAME TYPE
 #endif

@@ -1,4 +1,8 @@
-7
+1
+RowBoat
+1
+F
+9
 Battleship
 4
 A B C D
@@ -23,7 +27,3 @@ Kayak
 1
 J
 10
-RowBoat
-1
-F
-9

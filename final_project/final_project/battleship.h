@@ -35,6 +35,9 @@
 #define MISS 'X'
 #define HIT 'H'
 
+#define DISPLAY_GRID_END 1
+/* 0 FOR NOT DISPLAY HIT AND MISS, 1 FOR DISPLAY EVERY HIT AND MISS*/
+
 typedef unsigned int uint;
 typedef unsigned char uchar;
 

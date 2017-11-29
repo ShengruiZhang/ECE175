@@ -487,13 +487,13 @@ bool grid_print                        (player p1, player p2, uint end)
 				{
 				case 0:
 					grid_2[r][c] = 10;
-					if (end == 1)
+					if (DISPLAY_GRID_END == 1)
 						p2.map_0[r][c] = 10;
 					break;
 
 				case 1:                              // HIT
 					grid_2[r][c] = 11;
-					if (end == 1)
+					if (DISPLAY_GRID_END == 1)
 						p2.map_0[r][c] = 11;
 					break;
 
@@ -827,7 +827,7 @@ uint rand_num                          (uint low, uint high)
 		return rand() % ++high;                                              // INCREASE ONE SO THAT IT CAN RETURN HIGH
 	}
 	else if (low > 0) {
-		return rand() % ++high + low;
+		return (rand() % (high - low) + low);
 	}
 	else {
 		return 1;
@@ -869,6 +869,8 @@ ship *ship_generate                    (uint direc, uchar type[])
 
 		default:					break;
 	}
+	_temp->sleft = _temp->size;
+
 	_temp             = (ship*)realloc(_temp, sizeof(ship) + 4 * _temp->size * sizeof(uint));
 	_temp->loca_x     = (uint*)malloc(_temp->size * sizeof(uint));
 	_temp->loca_x_hit = (uint*)malloc(_temp->size * sizeof(uint));
@@ -879,7 +881,7 @@ ship *ship_generate                    (uint direc, uchar type[])
 	
 	///////////////////////////////////
 	// TESTING
-	direc = 0;
+	//direc = 3;
 	
 	switch (direc)
 	{
@@ -893,34 +895,37 @@ ship *ship_generate                    (uint direc, uchar type[])
 			}
 		break;
 		
-		
-		
-		
-		
-		
-		
 		case 1:
-		
-		
-		break;
-		
-		
-		
-		
-		
-		
-		
+			_temp->loca_x[0] = rand_num(1, 10 - _temp->size);
+			_temp->loca_y[0] = rand_num(1, 10 - _temp->size);
+			for (uint u = 1; u < _temp->size; ++u)
+			{
+				_temp->loca_y[u] = _temp->loca_y[0] + u;
+				_temp->loca_x[u] = _temp->loca_x[0];
+			}
+		break;		
 		
 		case 2:
-		
+			_temp->loca_x[0] = rand_num(1, 10 - _temp->size);
+			_temp->loca_y[0] = rand_num(1, 10 - _temp->size);
+			for (uint u = 1; u < _temp->size; ++u)
+			{
+				_temp->loca_y[u] = _temp->loca_y[0] + u;
+				_temp->loca_x[u] = _temp->loca_x[0] + u;
+			}
 		break;
 		
-		
-		
-		
+		case 3:
+			_temp->loca_x[0] = rand_num(_temp->size, 10);
+			_temp->loca_y[0] = rand_num(1, 11 - _temp->size);
+			for (uint u = 1; u < _temp->size; ++u)
+			{
+				_temp->loca_y[u] = _temp->loca_y[0] + u;
+				_temp->loca_x[u] = _temp->loca_x[0] - u;
+			}
+		break;
 		
 		default:			break;
-		
 	}
 	
 	

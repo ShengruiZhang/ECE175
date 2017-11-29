@@ -53,9 +53,11 @@ int main(void)
 	
 	uint num_player = 0;                         // WHAT FOR TRACKING WHOSE TURN, 0 FOR AI, 1 FOR HUMAN
 	
-	uint ship_temp = 0;                          // FOR TEMPORARY PROCESS
+	uint temp_int = 0;                           // GENERAL PURPOSE TEMP
 	
 	uint game_end = 0;                           // INDICATE THE END OF THE GAME
+	
+	uint counter = 0;                            // GENERAL PURPOSE COUNTER
 
 	bool empty = false;                          // INDICATOR FOR BOARD, EMPTY FOR TRUE
 	
@@ -93,7 +95,7 @@ int main(void)
 	ship *temp_3 = NULL;
 
 	/*//////////////////////////////////////////////
-	//  CONFIGURATING BOARD                       //
+	//  CONFIGURATING BOARD FOR HUMAN             //
 	//////////////////////////////////////////////*/
 	srand((uint)time(NULL));                                                     // RESET TIME
 	// ASK FOR INPUT METHOR, TYPE MANUALLY OR FROM FILE
@@ -156,6 +158,15 @@ int main(void)
 					if (board_configurate(temp, inpt, 0) != NULL) {
 						p1.list = temp;                                       // PUT THE LIST IN THE CONTAINER     
 						fclose(inpt);
+						// CHECK IF TWO LIST HAVE THE SAME AMOUNT OF SHIPS
+						temp = temp->next;
+						while (temp != NULL)
+						{
+							if (temp->size != 0)
+								++counter;
+							temp = temp->next;
+						}
+						temp_int = counter;
 						break;
 					}
 					else {
@@ -174,11 +185,12 @@ int main(void)
 		}
 	}
 	
-	///////////////////////////////////
-	// GENERATE BOARD FOR AI
+	/*//////////////////////////////////////////////
+	//  CONFIGURATING BOARD FOR AI                //
+	//////////////////////////////////////////////*/
 	
 	//printf("How do you want to configurate AI's grid? Type \"file\" to import from file or \"random\" to automatically fill grid. \n");
-
+	AI_INPT:
 	temp = ai_head;
 	while (1)
 	{
@@ -186,7 +198,7 @@ int main(void)
 		memset(command, '\0', SIZE_COMMAND);                                  // CLEAR STRING
 
 		// TESTING
-		strncpy(command, "random", 7);
+		strncpy(command, "file", 7);
 		//fgets(command, SIZE_COMMAND, stdin);
 		
 		if (strncmp(command, "file", 4) == 0)
@@ -196,12 +208,14 @@ int main(void)
 			{
 				printf("\nType the file name. \n");
 
-				fgets(file_name, SIZE_BOARD_FILE, stdin);
-				file_name[strlen(file_name) - 1] = 0;                         // GET RID OF THE NEWLINE
+				// TESTING
+				//fgets(file_name, SIZE_BOARD_FILE, stdin);
+				//file_name[strlen(file_name) - 1] = 0;                         // GET RID OF THE NEWLINE
 
 				//printf("\nFile name: %s \n", file_name);                      // COMFIRE FILE NAME
 
-				inpt = fopen(file_name, "r");
+				//inpt = fopen(file_name, "r");
+				inpt = fopen("2.txt", "r");
 				
 				if (inpt == NULL) {
 					printf("Error when opening file. \n");
@@ -213,7 +227,25 @@ int main(void)
 					if (board_configurate(temp, inpt, 0) != NULL) {
 						ai.list = temp;                                       // PUT THE LIST IN THE CONTAINER     
 						fclose(inpt);
-						break;
+						
+						// CHECK IF TWO LIST HAVE THE SAME AMOUNT OF SHIPS
+						temp = temp->next;
+						counter = 0;
+						while (temp != NULL)
+						{
+							if (temp->size != 0)
+								++counter;
+							temp = temp->next;
+						}
+						if (counter == temp_int)
+						{
+							break;
+						}
+						else
+						{
+							printf("The number of ships in two lists is different.\n");
+							goto AI_INPT;
+						}
 					}
 					else {
 						printf("Error: Null list. Code: 008 \n. ");
@@ -234,7 +266,7 @@ int main(void)
 			while (temp_2 != NULL)
 			{
 				do {
-					temp_3 = ship_generate(rand_num(0, 2), temp_2->type);
+					temp_3 = ship_generate(rand_num(0, 3), temp_2->type);
 				} while (!loca_protection(ai_head, temp_3));
 				
 				temp->next = temp_3;             // INSERT THE CURRENT CELL TO THE LIST AFTER VERIFICATION
@@ -251,9 +283,9 @@ int main(void)
 	}
 	
 	// TESTING
-	list_print(p1.list);
-	list_print(ai.list);
-	grid_print(ai, p1, 0);
+	//list_print(p1.list);
+	//list_print(ai.list);
+	//grid_print(ai, p1, 0);
 
 	// COPY SHIPS LOCATIONS TO MAP_0
 	array_config(p1.map_0, p1.list);
@@ -261,7 +293,7 @@ int main(void)
 	
 	// TESTING
 	
-	goto test;
+	//goto test;
 
 
 	/*//////////////////////////////////////////////
@@ -311,12 +343,18 @@ int main(void)
 			// USE FGETS TO AVOID TYPE THE X COOR TWICE
 			fgets(coor, SIZE_SHIP_TYPE, stdin);
 			sscanf(coor, "%d %c", &t_p1.y, &(t_p1.x_c));
+			if (t_p1.x_c < 65 && t_p1.x_c > 74 && t_p1.x_c < 97 && t_p1.x_c > 106)
+			{
+				printf("Please enter a valid location.\n");
+				goto LOCA_INPT;
+			}
 			
 			if (coor_translate(&t_p1) == 0)                                   // TRANSLATE AND CHECK INPUTS
 			{
 				goto LOCA_INPT;
 			}
-			//printf("row: %d, column: %c\n", t_p1.y, t_p1.x_c);
+			//printf("P1: row: %d, column: %d\n", t_p1.y, t_p1.x);
+			//printf("AI: row: %d, column: %d\n", t_ai.y, t_ai.x);
 			
 			///////////////////////////
 			// CHECK FOR HIT MISS SUNK, OR LOCATION INVALID
@@ -332,16 +370,16 @@ int main(void)
 			hour_glass();
 
 			// AI'S ROUND
-			t_ai.y = rand_num(1, 10);
-			t_ai.x = rand_num(1, 10);
+			t_ai.y = rand () % 11 + 1;
+			t_ai.x = rand () % 11 + 1;
 			t_ai.x_c = 0;
 
 			///////////////////////////
 			// CHECK FOR HIT MISS SUNK, OR LOCATION INVALID
 			while (list_update(t_ai, &ai, &p1) == 3)
 			{
-				t_ai.y = rand_num(1, 10);
-				t_ai.x = rand_num(1, 10);
+				t_ai.y = rand() % 11 + 1;
+				t_ai.x = rand() % 11 + 1;
 				t_ai.x_c = 0;
 			}
 			time_delay(1);
@@ -359,7 +397,7 @@ int main(void)
 	if (num_player == 0)
 		printf("\n\nComputer won the game!\n");
 	
-	test:
+	//test:
 
 	printf("\nGoodbye!\n");
 	return 0;

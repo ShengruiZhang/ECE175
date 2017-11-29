@@ -729,12 +729,15 @@ uint list_update                       (temp_shot atmp, player *current_p, playe
 	ship *previous = (*oppen).list;
 	
 	uint u = 0;
-	
+
 	///////////////////////////////////
 	// CHECK FOR SHOT OVERLAPPING
 	if ((*current_p).map[atmp.x - 1][atmp.y - 1] != 3)
 	{
-		printf("Location has been targeted, choose another one.");
+		if (strncmp((*current_p).name, "Computer", 8) != 0)
+		{
+			printf("Location has been targeted, choose another one.");
+		}
 		return u = 3;
 	}
 	

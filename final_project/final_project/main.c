@@ -304,7 +304,17 @@ int main(void)
 			game_end = 1;
 			break;
 		}
-		
+
+		/////////////////////////////////////
+		// RESET ATTEMPTES EVERY TIME
+		t_p1.x = 99;
+		t_p1.y = 99;
+		t_p1.x_c = 0;
+
+		t_ai.x = 99;
+		t_ai.y = 99;
+		t_ai.x_c = 0;
+
 		/////////////////////////////////////////
 		// AI AND HUMAN TAKE TURN
 		if (num_player == 1)

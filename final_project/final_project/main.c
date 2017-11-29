@@ -93,7 +93,10 @@ int main(void)
 	ship *temp = NULL;
 	ship *temp_2 = NULL;
 	ship *temp_3 = NULL;
-
+	/*////////// END DECLARATION ////////////*/
+	
+	
+	
 	/*//////////////////////////////////////////////
 	//  CONFIGURATING BOARD FOR HUMAN             //
 	//////////////////////////////////////////////*/
@@ -101,10 +104,8 @@ int main(void)
 	// ASK FOR INPUT METHOR, TYPE MANUALLY OR FROM FILE
 	printf("Player: Enter your name. ");
 
-	// TESTING
-	strcpy(p1.name, "Ashamsa");
-	//scanf("%s", p1.name);
-	//getchar();
+	scanf("%s", p1.name);
+	getchar();
 
 	printf("\nSelect which way to configurate the game board, configurate manually or input from an existing file. \n");
 
@@ -113,9 +114,8 @@ int main(void)
 		temp = player1_head;
 
 		printf("\n%s: Type \"manual\" or \"file\" to choose input method. \n", p1.name);
-		// TESTING
-		strcpy(command, "file");
-		//fgets(command, SIZE_COMMAND, stdin);
+
+		fgets(command, SIZE_COMMAND, stdin);
 		
 		// INPUT MANUALLY
 //		if (strcmp(command, "manual\n") == 0)
@@ -140,12 +140,8 @@ int main(void)
 			{
 				printf("\nType the file name. \n");
 
-				// TESTING
-				strcpy(file_name, "1.txt");
-				//fgets(file_name, SIZE_BOARD_FILE, stdin);
-				//file_name[strlen(file_name) - 1] = 0;                         // GET RID OF THE NEWLINE
-
-				//printf("\nFile name: %s \n", file_name);                      // COMFIRE FILE NAME
+				fgets(file_name, SIZE_BOARD_FILE, stdin);
+				file_name[strlen(file_name) - 1] = 0;                         // GET RID OF THE NEWLINE
 
 				inpt = fopen(file_name, "r");
 				
@@ -185,11 +181,11 @@ int main(void)
 		}
 	}
 	
+	
 	/*//////////////////////////////////////////////
 	//  CONFIGURATING BOARD FOR AI                //
 	//////////////////////////////////////////////*/
 	
-	//printf("How do you want to configurate AI's grid? Type \"file\" to import from file or \"random\" to automatically fill grid. \n");
 	AI_INPT:
 	temp = ai_head;
 	while (1)
@@ -197,9 +193,7 @@ int main(void)
 		printf("How do you want to configurate AI's grid? Type \"file\" to import from file or \"random\" to automatically fill grid. \n");
 		memset(command, '\0', SIZE_COMMAND);                                  // CLEAR STRING
 
-		// TESTING
-		strncpy(command, "file", 7);
-		//fgets(command, SIZE_COMMAND, stdin);
+		fgets(command, SIZE_COMMAND, stdin);
 		
 		if (strncmp(command, "file", 4) == 0)
 //		if (strcmp(command, "file\n") == 0)
@@ -208,14 +202,10 @@ int main(void)
 			{
 				printf("\nType the file name. \n");
 
-				// TESTING
-				//fgets(file_name, SIZE_BOARD_FILE, stdin);
-				//file_name[strlen(file_name) - 1] = 0;                         // GET RID OF THE NEWLINE
+				fgets(file_name, SIZE_BOARD_FILE, stdin);
+				file_name[strlen(file_name) - 1] = 0;                         // GET RID OF THE NEWLINE
 
-				//printf("\nFile name: %s \n", file_name);                      // COMFIRE FILE NAME
-
-				//inpt = fopen(file_name, "r");
-				inpt = fopen("2.txt", "r");
+				inpt = fopen(file_name, "r");
 				
 				if (inpt == NULL) {
 					printf("Error when opening file. \n");
@@ -256,6 +246,7 @@ int main(void)
 			break;
 		}
 		
+		///////////////////////////////
 		// CONFIGURATE GRID RANDOMLY
 		if (strncmp(command, "random", 4) == 0)
 //		if (strcmp(command, "random\n") == 0)
@@ -275,27 +266,20 @@ int main(void)
 			}
 			break;
 		}
+		
 		// HANDLE ERROR
 		else {
 			printf("Wrong command, please type again. \n");
 			memset(command, '\0', SIZE_COMMAND);                              // CLEAR STRING
 		}
 	}
-	
-	// TESTING
-	//list_print(p1.list);
-	//list_print(ai.list);
-	//grid_print(ai, p1, 0);
 
 	// COPY SHIPS LOCATIONS TO MAP_0
 	array_config(p1.map_0, p1.list);
 	array_config(ai.map_0, ai.list);
-	
-	// TESTING
-	
-	//goto test;
 
-
+	
+	
 	/*//////////////////////////////////////////////
 	//  MAIN GAME LOOP                            //
 	//////////////////////////////////////////////*/
@@ -327,17 +311,6 @@ int main(void)
 		{
 			// HUMAN'S ROUND
 			
-			// FOR TESTING
-			/*temp = ai.list->next;
-			while (temp != NULL)
-			{
-				for (uint i = 0; i < temp->size; ++i)
-				{
-					printf("\nHit: x: %d, y: %d", temp->loca_x_hit[i], temp->loca_y_hit[i]);
-				}
-				temp = temp->next;
-			}*/
-			
 			LOCA_INPT:
 			printf("\n\n%s: Enter in the location of your next shot: row number, column letter. ", p1.name);
 			// USE FGETS TO AVOID TYPE THE X COOR TWICE
@@ -353,8 +326,6 @@ int main(void)
 			{
 				goto LOCA_INPT;
 			}
-			//printf("P1: row: %d, column: %d\n", t_p1.y, t_p1.x);
-			//printf("AI: row: %d, column: %d\n", t_ai.y, t_ai.x);
 			
 			///////////////////////////
 			// CHECK FOR HIT MISS SUNK, OR LOCATION INVALID
@@ -396,8 +367,6 @@ int main(void)
 
 	if (num_player == 0)
 		printf("\n\nComputer won the game!\n");
-	
-	//test:
 
 	printf("\nGoodbye!\n");
 	return 0;

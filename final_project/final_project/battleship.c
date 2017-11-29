@@ -255,7 +255,6 @@ ship *board_configurate                (ship *headptr, FILE *input, uint ai)
 				else {
 					printf("Invalid command, enter again. Code: 505 \n");
 					memset(str_command, '\0', sizeof(str_command));
-					buffer_clear();
 				}
 			}
 		}
@@ -416,19 +415,7 @@ bool grid_print                        (player p1, player p2, uint end)
 	
 	// UPDATE THE GRID BASED ON THE SHIP TYPE
 	num_ship_1 = array_config(grid_1, p1.list);
-	/*
-	temp = p1.list->next;
-	while (temp != NULL)
-	{
-		ship_type = ship_code_translate(temp->type);
-		for (index_array = 0; index_array < temp->size; ++index_array)
-		{
-			grid_1[temp->loca_y[index_array] - 1][temp->loca_x[index_array] - 1] = ship_type;
-		}
-		++num_ship_1;
-		temp = temp->next;
-	}
-	*/
+
 	// UPDATE THE MISSES AND HITS BY OPPONENT
 	if (1)
 	{
@@ -458,25 +445,9 @@ bool grid_print                        (player p1, player p2, uint end)
 	}
 	
 	// UPDATE THE GRID BASED ON THE SHIP TYPE
-	//num_ship_2 = array_config(grid_2, p2.list);
 	num_ship_2 = 1;
-
-		/*
-		temp = p2.list->next;
-		while (temp != NULL)
-		{
-			ship_type = ship_code_translate(temp->type);
-			for (index_array = 0; index_array < temp->size; ++index_array)
-			{
-				grid_2[temp->loca_y[index_array] - 1][temp->loca_x[index_array] - 1] = ship_type;
-				p2.map_0[temp->loca_y[index_array] - 1][temp->loca_x[index_array] - 1] = ship_type;
-			}
-			++num_ship_2;
-			temp = temp->next;
-		*/
-		
+	
 	// UPDATE THE MISSES AND HITS BY OPPONENT
-
 	if (1)
 	{
 		for (r = 0; r < 10; ++r)
@@ -518,9 +489,7 @@ bool grid_print                        (player p1, player p2, uint end)
 
 	if (end != 1)
 	{
-		//printf("                               Player 1");
 		printf("                             Your board");
-		//printf("                                                         Player 2\n\n");
 		printf("                                                         Attempts\n\n");
 	}
 	else
@@ -528,7 +497,6 @@ bool grid_print                        (player p1, player p2, uint end)
 		printf("                             Your board");
 		printf("                                                     Opponent's board\n\n");
 	}
-
 
 	printf("     ");                                                              // 5 SPACES
 	printf("   A     B     C     D     E     F     G     H     I     J");
@@ -585,6 +553,7 @@ bool grid_print                        (player p1, player p2, uint end)
 		}
 		printf("|");
 	
+
 	
 		if (r_2 < 10) {
 			printf("             ");                                              // 14 SPACES
@@ -704,9 +673,6 @@ bool loca_protection                   (ship *headptr, ship *tar)
 				if (tar->loca_x[i] == temp->loca_x[j] &&
 				    tar->loca_y[i] == temp->loca_y[j])
 				{
-					// BREAK AND RETURE WITH FALSE
-					//printf("x: %d\ty: %d\n", tar->loca_x[i], tar->loca_y[i]);
-					//printf("x: %d\ty: %d\n", temp->loca_x[j], temp->loca_y[j]);
 					return valid = false;
 				}
 			}				
@@ -778,17 +744,10 @@ uint list_update                       (temp_shot atmp, player *current_p, playe
 		{
 			if (temp->loca_x[u] == atmp.x &&                         // CHECK FOR HIT
 			    temp->loca_y[u] == atmp.y)
-			{
-				// FOR TESTING
-				//printf("x: %d, x_c: %c, y: %d\n", atmp.x, atmp.x_c, atmp.y);
-				
+			{				
 				// WRITE THE COOR TO OPPONENT'S LIST
 				temp->loca_x_hit[temp->sleft - 1] = atmp.x;
 				temp->loca_y_hit[temp->sleft - 1] = atmp.y;
-
-				// FOR TESTING
-				//printf("List hit: x: %d, y: %d\n", temp->loca_x[temp->sleft - 1], temp->loca_y[temp->sleft - 1]);
-				//printf("Hit: %d, %d\n", temp->loca_x_hit[temp->sleft - 1], temp->loca_y_hit[temp->sleft - 1]);
 
 				--temp->sleft;
 				(*current_p).hit += 1;                               // INCREASE HITS
@@ -877,12 +836,6 @@ ship *ship_generate                    (uint direc, uchar type[])
 	_temp->loca_y     = (uint*)malloc(_temp->size * sizeof(uint));
 	_temp->loca_y_hit = (uint*)malloc(_temp->size * sizeof(uint));
 	
-	//direc = rand_num(0, 2);
-	
-	///////////////////////////////////
-	// TESTING
-	//direc = 3;
-	
 	switch (direc)
 	{
 		case 0:                        // HORIZONTAL
@@ -928,34 +881,7 @@ ship *ship_generate                    (uint direc, uchar type[])
 		default:			break;
 	}
 	
-	
-	//cell = _temp; 
 	_temp->next = NULL;
 	
 	return _temp;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

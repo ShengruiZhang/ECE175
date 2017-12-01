@@ -35,11 +35,11 @@ int main(void)
 		for (int j = 0; j < SIZE; ++j)
 		{
 			output[i][j] = input[i][j];
-			printf("%d ", output[i][j]);
+			//printf("%d ", output[i][j]);
 		}
-		printf("\n");
+		//printf("\n");
 	}
-	printf("\n\n");
+
 	select(input, output);
 
 	for (int i = 0; i < SIZE; ++i)
@@ -72,7 +72,7 @@ void readdata(int A[][SIZE], FILE *inp)
 void select(int inp[][SIZE], int outp[][SIZE])
 {
 	
-	
+	int inter = 0;
 	unsigned int r = 0;
 	unsigned int c = 0;
 	
@@ -90,18 +90,19 @@ void select(int inp[][SIZE], int outp[][SIZE])
 		{
 			//max = inp[r][c] + inp[r][c + 2] + inp[r + 2][c] + inp[r + 2][c + 2];
 			e[0] = inp[r][c];
-			
+			max = inp[r][c];
 			e[1] = inp[r][c + 2];
 			e[2] = inp[r + 2][c];
 			e[3] = inp[r + 2][c + 2];
 			h = 0;
 			max_2 = 0;
+			outp[r + 1][c + 1] = 0;
 			for (f = 0; f < 3; ++f)
 			{
 				//max = e[f];
 				for (b = 3; b > h; --b)
 				{
-					max = e[f];
+					//max = e[f];
 					//while (b >= 0)
 					//{
 					if (e[b] > e[f])
@@ -111,14 +112,28 @@ void select(int inp[][SIZE], int outp[][SIZE])
 						//printf("%d\n", outp[r + 1][c + 1]);
 					}
 					//}
+					if (max_2 > max) {
+						//max = max_2;
+						outp[r + 1][c + 1] = max_2;
+						max = max_2;
+					}
+					else
+					{
+						outp[r + 1][c + 1] = max;
+					}
+					if (max_2 > outp[r + 1][c + 1]) {
+						outp[r + 1][c + 1] = max_2;
+					}
+					inter = outp[r + 1][c + 1];
 				}
 				
 				++h;
 			}
-			if (max_2 > max) {
-				max = max_2;
-			}
-			outp[r + 1][c + 1] = max;
+
+
+
+			
+			
 		}
 	}
 	
